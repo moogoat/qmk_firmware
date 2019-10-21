@@ -38,3 +38,4 @@
 
 
 #define TAPPING_TOGGLE 1
+#define AUDIO_CLICKY
