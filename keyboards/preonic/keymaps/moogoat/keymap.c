@@ -251,14 +251,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           }
           return false;
           break;
-        case NUMPAD:
-          if (record->event.pressed) {
-
-          } else {
-
-          }
-          return false;
-          break;
       }
     return true;
 };
@@ -293,24 +285,6 @@ void encoder_update_user(uint8_t index, bool clockwise) {
       unregister_code(KC_PGUP);
     }
   }
-}
-
-void dip_switch_update_user(uint8_t index, bool active) {
-    switch (index) {
-        case 0:
-            if (active) {
-                layer_on(_ADJUST);
-            } else {
-                layer_off(_ADJUST);
-            }
-            break;
-        case 1:
-            if (active) {
-                muse_mode = true;
-            } else {
-                muse_mode = false;
-            }
-    }
 }
 
 
