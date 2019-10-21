@@ -153,7 +153,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+-------------+------+------+------+------+------|
  * |      |      |  <   |   {  |  (   |   [  |   ]  |  )   |   }  |  >   |      |      |
  * |------+------+------+------+------+------|------+------+------+------+------+------|
- * |Shift |      |      |      |      |      |      |      |      |      |      |Sh/Ent|
+ * |Shift |      |      |      |      |      |      |      |      |      | Mute |Sh/Ent|
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |      |      |      |      |      |             |      | Next | Vol- | Vol+ | Play |
  * `-----------------------------------------------------------------------------------'
@@ -161,8 +161,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_RAISE] = LAYOUT_preonic_grid( \
   _______, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_MINS, KC_EQL, KC_BSPC, \
   _______, KC_F9, KC_F10, KC_F11, KC_F12, _______, _______, _______, _______, _______, _______, KC_DEL,  \
-  _______, _______, S(KC_COMM), S(KC_RBRC), S(KC_9), KC_RBRC, S(KC_0), S(KC_LBRC), S(KC_DOT), _______, _______, _______, \
-  KC_LSFT, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, MT(MOD_RSFT, KC_ENT), \
+  _______, _______, S(KC_COMM), S(KC_LBRC), S(KC_9), KC_LBRC, KC_RBRC, S(KC_0), S(KC_RBRC), S(KC_DOT), _______, _______, \
+  KC_LSFT, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_MUTE, MT(MOD_RSFT, KC_ENT), \
   _______, _______, _______, _______, _______, _______, _______, _______, KC_MNXT, KC_VOLD, KC_VOLU, KC_MPLY  \
 ),
 
@@ -186,7 +186,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   C(S(KC_ESC)), _______,  _______,  COLEMAK,   _______,  _______,   _______,  MU_TOG, MUV_DE, MUV_IN, MU_MOD, _______, \
   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______  \
 ),
-
 /* Numpad
  * ,-----------------------------------------------------------------------------------.
  * |      |      |      |      |      |      |      | CALC | NUM_/| NUM_*|NUM_- |     |
@@ -254,6 +253,20 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
     return true;
 };
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+    switch (get_highest_layer(state)) {
+        case _NUMPAD: ;
+            #if defined(AUDIO_ENABLE)
+                float num_song[][2] = SONG(NUM_LOCK_ON_SOUND);
+                PLAY_SONG(num_song);
+            #endif
+            break;
+        default:
+            break;
+    }
+    return state;
+}
 
 bool muse_mode = false;
 uint8_t last_muse_note = 0;
