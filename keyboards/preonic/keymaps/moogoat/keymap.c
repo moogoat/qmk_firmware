@@ -253,20 +253,26 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
     return true;
 };
-
+/*
 layer_state_t layer_state_set_user(layer_state_t state) {
     switch (get_highest_layer(state)) {
+        case _QWERTY: ;
+            #if defined(AUDIO_ENABLE)
+                float num_off_song[][2] = SONG(NUM_LOCK_OFF_SOUND);
+                PLAY_SONG(num_off_song);
+            #endif
+            break;
         case _NUMPAD: ;
             #if defined(AUDIO_ENABLE)
-                float num_song[][2] = SONG(NUM_LOCK_ON_SOUND);
-                PLAY_SONG(num_song);
+                float num_on_song[][2] = SONG(NUM_LOCK_ON_SOUND);
+                PLAY_SONG(num_on_song);
             #endif
             break;
         default:
             break;
     }
     return state;
-}
+}*/
 
 bool muse_mode = false;
 uint8_t last_muse_note = 0;
