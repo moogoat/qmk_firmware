@@ -71,7 +71,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|------+------+------+------+------+------|
  * | Shift|   Z  |   X  |   C  |   V  |   B  |   N  |   M  |   ,  |   .  |   /  |Sh/Ent|
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * | CTRL | GUI  |Numpad| ALT  |Lower |    Space    |Raise | Left | Down |  Up  |Right |
+ * | CTRL | GUI  |Numpad| ALT  |Numpad|    Space    |Raise | Left | Down |  Up  |Right |
  * `-----------------------------------------------------------------------------------'
  */
 [_QWERTY] = LAYOUT_preonic_grid( \
@@ -79,7 +79,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,  \
   KC_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, \
   KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, MT(MOD_RSFT, KC_ENT),  \
-  KC_LCTL, KC_LGUI, NUMPAD, KC_LALT, LOWER,   KC_SPC,  KC_SPC,  RAISE,   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT  \
+  KC_LCTL, KC_LGUI, NUMPAD, KC_LALT, NUMPAD,   KC_SPC,  KC_SPC,  RAISE,   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT  \
 ),
 
 /* Colemak
@@ -92,7 +92,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|------+------+------+------+------+------|
  * | Shift|   Z  |   X  |   C  |   V  |   B  |   K  |   M  |   ,  |   .  |   /  |Sh/Ent|
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * | CTRL | GUI  |Numpad| ALT  |Lower |    Space    |Raise | Left | Down |  Up  |Right |
+ * | CTRL | GUI  |Numpad| ALT  |Numpad|    Space    |Raise | Left | Down |  Up  |Right |
  * `-----------------------------------------------------------------------------------'
  */
 [_COLEMAK] = LAYOUT_preonic_grid( \
@@ -100,7 +100,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TAB,  KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,    KC_J,    KC_L,    KC_U,    KC_Y,    KC_SCLN, KC_BSLS,  \
   KC_ESC,  KC_A,    KC_R,    KC_S,    KC_T,    KC_D,    KC_H,    KC_N,    KC_E,    KC_I,    KC_O,    KC_QUOT, \
   KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, MT(MOD_RSFT, KC_ENT),  \
-  KC_LCTL, KC_LGUI, NUMPAD, KC_LALT, LOWER,   KC_SPC,  KC_SPC,  RAISE,   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT  \
+  KC_LCTL, KC_LGUI, NUMPAD, KC_LALT, NUMPAD,   KC_SPC,  KC_SPC,  RAISE,   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT  \
 ),
 
 /* Dvorak
@@ -113,7 +113,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|------+------+------+------+------+------|
  * | Shift|   ;  |   Q  |   J  |   K  |   X  |   B  |   M  |   W  |   V  |   Z  |Sh/Ent|
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * | CTRL | GUI  |Numpad| ALT  |Lower |    Space    |Raise | Left | Down |  Up  |Right |
+ * | CTRL | GUI  |Numpad| ALT  |Numpad|    Space    |Raise | Left | Down |  Up  |Right |
  * `-----------------------------------------------------------------------------------'
  */
 [_DVORAK] = LAYOUT_preonic_grid( \
@@ -121,7 +121,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TAB,  KC_QUOT, KC_COMM, KC_DOT,  KC_P,    KC_Y,    KC_F,    KC_G,    KC_C,    KC_R,    KC_L,    KC_BSLS,  \
   KC_ESC,  KC_A,    KC_O,    KC_E,    KC_U,    KC_I,    KC_D,    KC_H,    KC_T,    KC_N,    KC_S,    KC_SLSH, \
   KC_LSFT, KC_SCLN, KC_Q,    KC_J,    KC_K,    KC_X,    KC_B,    KC_M,    KC_W,    KC_V,    KC_Z,    MT(MOD_RSFT, KC_ENT),  \
-  KC_LCTL, KC_LGUI, NUMPAD, KC_LALT, LOWER,   KC_SPC,  KC_SPC,  RAISE,   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT  \
+  KC_LCTL, KC_LGUI, NUMPAD, KC_LALT, NUMPAD,   KC_SPC,  KC_SPC,  RAISE,   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT  \
 ),
 
 /* Lower
@@ -188,23 +188,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 /* Numpad
  * ,-----------------------------------------------------------------------------------.
- * |      |      |      |      |      |      |      | CALC | NUM_/| NUM_*|NUM_- |     |
+ * |      |      |      |      |      |      |      |      | CALC | NUM_/| NUM_*|Backsp|
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      |      |      |      |      |      |      |  NUM7|NUM8  | NUM9 | NUM_+|      |
+ * |      |      |      |      |      |      |      |      |  NUM7|NUM8  | NUM9 | NUM_-|
  * |------+------+------+------+------+-------------+------+------+------+------+------|
- * |      |      |      |      |      |      |      |  NUM4| NUM5 | NUM6 | NUM_+|      |
+ * |      |      |      |      |      |      |      |      |  NUM4| NUM5 | NUM6 | NUM_+|
  * |------+------+------+------+------+------|------+------+------+------+------+------|
- * |      |      |      |      |      |      |      | NUM1 | NUM2 | NUM3 |NUMENT|      |
+ * |      |      |      |      |      |      |      |      | NUM1 | NUM2 | NUM3 |NUMENT|
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      |      |NUMPAD|      |      |      NUM_0  |NUM0  | NUM_0| NUM_.|NUMENT|      |
+ * |      |      |NUMPAD|      |      |    Space    |      | NUM0 | NUM_0| NUM_.|NUMENT|
  * `-----------------------------------------------------------------------------------'
  */
 [_NUMPAD] = LAYOUT_preonic_grid( \
-  _______, _______, _______, _______, _______, _______, _______, KC_CALC, KC_PSLS, KC_PAST, KC_PMNS, _______, \
-  _______, _______, _______, _______, _______, _______, _______, KC_P7, KC_P8, KC_P9, KC_PPLS, _______,  \
-  _______, _______, _______, _______, _______, _______, _______, KC_P4, KC_P5, KC_P6, KC_PPLS, _______, \
-  _______, _______, _______, _______, _______, _______, _______, KC_P1, KC_P2, KC_P3, KC_PENT, _______, \
-  _______, _______, NUMPAD, _______, _______, KC_KP_0, KC_KP_0, KC_KP_0, KC_KP_0, KC_PDOT, KC_PENT, _______  \
+  _______, _______, _______, _______, _______, _______, _______, _______, KC_CALC, KC_PSLS, KC_PAST, KC_BSPC, \
+  _______, _______, _______, _______, _______, _______, _______, _______, KC_P7, KC_P8, KC_P9, KC_PMNS,  \
+  _______, _______, _______, _______, _______, _______, _______, _______, KC_P4, KC_P5, KC_P6, KC_PPLS, \
+  _______, _______, _______, _______, _______, _______, _______, _______, KC_P1, KC_P2, KC_P3, KC_PENT, \
+  _______, _______, NUMPAD, _______, _______, KC_SPC,  KC_SPC, _______, KC_KP_0, KC_KP_0, KC_PDOT, KC_PENT  \
 )
 
 
