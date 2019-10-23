@@ -39,3 +39,4 @@
 
 #define TAPPING_TOGGLE 1
 #define AUDIO_CLICKY
+#define PERMISSIVE_HOLD
