@@ -1,10 +1,11 @@
 #include <string.h>
 #include <ctype.h> // for uppercase/lowercase functions
 
-
+// #define TESTING_FUNCTIONS
 
 #ifdef TESTING_FUNCTIONS
 #include <stdio.h>
+#include "macros.c"
 #endif
 
 // switches character at position x with position x+1, if they are both lower case letters
@@ -51,10 +52,13 @@ char * missCap(char *input, int x) {
 #ifdef TESTING_FUNCTIONS
 int main() {
     char input[256];
-    printf("Enter test string: \n");
-    fgets(input, 256, stdin);
-    missCap(input, 3);
-    printf("%s\n", input);
+    // printf("Enter test string: \n");
+    // fgets(input, 256, stdin);
+    // missCap(input, 3);
+    // printf("%s\n", input);
+    char c[5] = "asdfg";
+    // printf("%s\n", moogoat_macros[m_wellNAD][0]);
+    printf("%zu\n", moogoat_grouplen(moogoat_macros[m_lymphadenopathy]));
     return 0;
 }
 #endif
