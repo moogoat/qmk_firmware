@@ -17,6 +17,8 @@
 #include QMK_KEYBOARD_H
 #include "muse.h"
 
+#include "typo_funcs.c"
+
 #define NUMPAD TG(_NUMPAD)
 
 enum preonic_layers {
@@ -36,6 +38,9 @@ enum preonic_keycodes {
   LOWER,
   RAISE
 };
+
+// Helpers
+
 
 /* Blank
  * ,-----------------------------------------------------------------------------------.
