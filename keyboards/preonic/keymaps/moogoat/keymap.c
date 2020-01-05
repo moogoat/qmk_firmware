@@ -41,6 +41,16 @@ enum preonic_keycodes {
 
 // Helpers
 
+// Random
+static unsigned int g_seed;
+inline void fast_srand(int seed) {
+    if(g_seed == 0) g_seed = seed;
+}
+
+inline int fastrand() {
+    g_seed = (214013*g_seed+2531011);
+    return (g_seed>>16)&0x7FFF;
+}
 
 /* Blank
  * ,-----------------------------------------------------------------------------------.
@@ -342,3 +352,18 @@ bool music_mask_user(uint16_t keycode) {
       return true;
   }
 }
+
+/*
+For future macros: this might be useful for tap dance. Note that state->keycode may be something to use
+
+void dance_egg (qk_tap_dance_state_t *state, void *user_data) {
+  if (state->count >= 100) {
+    SEND_STRING ("Safety dance!");
+    reset_tap_dance (state);
+  }
+}
+
+qk_tap_dance_action_t tap_dance_actions[] = {
+ [CT_EGG] = ACTION_TAP_DANCE_FN (dance_egg)
+};
+*/
