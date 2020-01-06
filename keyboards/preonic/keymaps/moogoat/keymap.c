@@ -20,7 +20,7 @@
 #include "typo_funcs.c"
 
 enum preonic_layers {
-  _QWERTY,
+  _QWERTY = 0,
   _COLEMAK,
   _DVORAK,
   _ARROWS,
@@ -35,6 +35,11 @@ enum preonic_keycodes {
   DVORAK,
   NUMPAD,
   RAISE
+};
+
+#define TD_START_KEYCODE 0x5700 // this is from the source code, quantum_keycodes.h
+enum preonic_tapdance {
+    TD_NUMPAD_LOCK = 1
 };
 
 // Helpers
@@ -92,7 +97,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,  \
   KC_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    LT(_ARROWS, KC_J),    KC_K,    KC_L,    KC_SCLN, KC_QUOT, \
   KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, MT(MOD_RSFT, KC_ENT),  \
-  KC_LCTL, KC_LGUI, TG(_NUMPAD), KC_LALT, NUMPAD,   KC_SPC,  KC_SPC,  RAISE,   KC_MINS, KC_DOWN, KC_UP,   KC_RGHT  \
+  KC_LCTL, KC_LGUI, TD(TD_NUMPAD_LOCK), KC_LALT, NUMPAD,   KC_SPC,  KC_SPC,  RAISE,   KC_MINS, KC_DOWN, KC_UP,   KC_RGHT  \
 ),
 
 /* Colemak
@@ -113,7 +118,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TAB,  KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,    KC_J,    KC_L,    KC_U,    KC_Y,    KC_SCLN, KC_BSLS,  \
   KC_ESC,  KC_A,    KC_R,    KC_S,    KC_T,    KC_D,    KC_H,    LT(_ARROWS, KC_N),    KC_E,    KC_I,    KC_O,    KC_QUOT, \
   KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, MT(MOD_RSFT, KC_ENT),  \
-  KC_LCTL, KC_LGUI, TG(_NUMPAD), KC_LALT, NUMPAD,   KC_SPC,  KC_SPC,  RAISE,   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT  \
+  KC_LCTL, KC_LGUI, TD(TD_NUMPAD_LOCK), KC_LALT, NUMPAD,   KC_SPC,  KC_SPC,  RAISE,   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT  \
 ),
 
 /* Dvorak
@@ -134,7 +139,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TAB,  KC_QUOT, KC_COMM, KC_DOT,  KC_P,    KC_Y,    KC_F,    KC_G,    KC_C,    KC_R,    KC_L,    KC_BSLS,  \
   KC_ESC,  KC_A,    KC_O,    KC_E,    KC_U,    KC_I,    KC_D,    LT(_ARROWS, KC_H),    KC_T,    KC_N,    KC_S,    KC_SLSH, \
   KC_LSFT, KC_SCLN, KC_Q,    KC_J,    KC_K,    KC_X,    KC_B,    KC_M,    KC_W,    KC_V,    KC_Z,    MT(MOD_RSFT, KC_ENT),  \
-  KC_LCTL, KC_LGUI, TG(_NUMPAD), KC_LALT, NUMPAD,   KC_SPC,  KC_SPC,  RAISE,   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT  \
+  KC_LCTL, KC_LGUI, TD(TD_NUMPAD_LOCK), KC_LALT, NUMPAD,   KC_SPC,  KC_SPC,  RAISE,   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT  \
 ),
 
 /* Arrows
@@ -266,26 +271,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
     return true;
 };
-/*
-layer_state_t layer_state_set_user(layer_state_t state) {
-    switch (get_highest_layer(state)) {
-        case _QWERTY: ;
-            #if defined(AUDIO_ENABLE)
-                float num_off_song[][2] = SONG(NUM_LOCK_OFF_SOUND);
-                PLAY_SONG(num_off_song);
-            #endif
-            break;
-        case _NUMPAD: ;
-            #if defined(AUDIO_ENABLE)
-                float num_on_song[][2] = SONG(NUM_LOCK_ON_SOUND);
-                PLAY_SONG(num_on_song);
-            #endif
-            break;
-        default:
-            break;
-    }
-    return state;
-}*/
 
 #ifdef AUDIO_ENABLE
 bool muse_mode = false;
@@ -315,6 +300,17 @@ void matrix_scan_user(void) {
     }
 #endif
 }
+
+void test_td(qk_tap_dance_state_t *state, void *user_data) {
+    char buf[256];
+    sprintf(buf, "count: %d, keycode: %d", state->count, state->keycode);
+    SEND_STRING(buf);
+    reset_tap_dance(state);
+}
+
+qk_tap_dance_action_t tap_dance_actions[] = {
+    [TD_NUMPAD_LOCK] = ACTION_TAP_DANCE_FN(test_td)
+};
 
 /*
 For future macros: this might be useful for tap dance. Note that state->keycode may be something to use
