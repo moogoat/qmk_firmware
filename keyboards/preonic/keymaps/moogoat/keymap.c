@@ -86,7 +86,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|------+------+------+------+------+------|
  * | Shift|   Z  |   X  |   C  |   V  |   B  |   N  |   M  |   ,  |   .  |   /  |Sh/Ent|
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * | CTRL | GUI  |Numpad| ALT  |Numpad|    Space    |Raise | Left | Down |  Up  |Right |
+ * | CTRL | GUI  |Numpad| ALT  |Numpad|    Space    |Raise |   -  | Down |  Up  |Right |
  * `-----------------------------------------------------------------------------------'
  */
 [_QWERTY] = LAYOUT_preonic_grid( \
@@ -94,7 +94,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,  \
   KC_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    LT(_LOWER, KC_J),    KC_K,    KC_L,    KC_SCLN, KC_QUOT, \
   KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, MT(MOD_RSFT, KC_ENT),  \
-  KC_LCTL, KC_LGUI, NUMPAD, KC_LALT, LOWER,   KC_SPC,  KC_SPC,  RAISE,   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT  \
+  KC_LCTL, KC_LGUI, NUMPAD, KC_LALT, LOWER,   KC_SPC,  KC_SPC,  RAISE,   KC_MINS, KC_DOWN, KC_UP,   KC_RGHT  \
 ),
 
 /* Colemak
@@ -141,7 +141,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /* Lower
  * ,-----------------------------------------------------------------------------------.
- * |      |      |      |      |      |      |      |      |      |      |   -  |  =   |
+ * |      |      |      |      |      |      |      |      |      |      |      |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |      | Home | Bksp |  Up  |  Del |  End |      |      |      |      |      |      |   Del|
  * |------+------+------+------+------+-------------+------+------+------+------+------|
@@ -153,7 +153,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * `-----------------------------------------------------------------------------------'
  */
 [_LOWER] = LAYOUT_preonic_grid( \
-  _______, _______, _______,   _______, _______,  _______, _______, _______, _______, _______, KC_MINS, KC_EQL, \
+  _______, _______, _______,   _______, _______,  _______, _______, _______, _______, _______, _______, _______, \
   _______, KC_HOME, KC_BSPC, KC_UP, KC_DEL, KC_END, _______, _______, _______, _______, _______, KC_DEL,  \
   _______, C(KC_LEFT), KC_LEFT, KC_DOWN, KC_RIGHT, C(KC_RIGHT), _______, _______, _______, _______, _______, _______, \
   KC_LSFT, _______, _______,   _______, _______,  _______, _______, _______, _______, _______, _______, MT(MOD_RSFT, KC_ENT), \
@@ -162,7 +162,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /* Raise
  * ,-----------------------------------------------------------------------------------.
- * |      |  F1  |  f2  |  f3  | f4   | f5   |  f6  | f7   | f8   |  -   |   =  |  BKSP|
+ * |      |  F1  |  f2  |  f3  | f4   | f5   |  f6  | f7   | f8   |  =   |   +  |  BKSP|
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |      |  f9  |  f10 |  f11 |  f12 |      |      |      |      |      |      |   Del|
  * |------+------+------+------+------+-------------+------+------+------+------+------|
@@ -174,7 +174,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * `-----------------------------------------------------------------------------------'
  */
 [_RAISE] = LAYOUT_preonic_grid( \
-  _______, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, _______, KC_MINS, KC_EQL, \
+  _______, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, _______, KC_EQL, S(KC_EQL), \
   _______, KC_F9, KC_F10, KC_F11, KC_F12, _______, _______, _______, _______, _______, _______, KC_DEL,  \
   _______, _______, S(KC_COMM), S(KC_LBRC), S(KC_9), KC_LBRC, KC_RBRC, S(KC_0), S(KC_RBRC), S(KC_DOT), _______, _______, \
   KC_LSFT, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_MUTE, MT(MOD_RSFT, KC_ENT), \

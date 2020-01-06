@@ -1,5 +1,5 @@
-size_t moogoat_grouplen(const char *group[]) {
-    size_t output = 0;
+unsigned char moogoat_grouplen(const char *group[]) {
+    unsigned char output = 0;
     while(group[output] > 0 && output <4) {
         ++output;
         continue;
