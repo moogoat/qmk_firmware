@@ -185,9 +185,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |      |Qwerty|      |      |      |      |      |      |      |      |      |C+A+D |
  * |------+------+------+------+------+-------------+------+------+------+------+------|
- * | RESET|AU TOG|      |DVORAK|      |      |      |CK TOG|CKFr- |CKFr+ |CKFr R|      |
+ * | RESET|AU TOG|      |DVORAK|      |      |      |      |      |      |      |      |
  * |------+------+------+------+------+------|------+------+------+------+------+------|
- * |C+S+Es|      |      |COLMAK|      |      |      |MU TOG|VOICE-|VOICE+|MU MOD|      |
+ * |C+S+Es|      |      |COLMAK|      |      |      |      |      |      |      |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |      |      |      |      |      |             |      |      |      |      |      |
  * `-----------------------------------------------------------------------------------'
@@ -195,8 +195,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_ADJUST] = LAYOUT_preonic_grid( \
   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  \
   _______, QWERTY, _______,   _______, _______, _______, _______, _______, _______,_______, _______, C(A(KC_DEL)),  \
-  RESET, AU_TOG, _______,  DVORAK,   _______,  _______, _______, CK_TOGG,  CK_DOWN, CK_UP,  CK_RST, _______, \
-  C(S(KC_ESC)), _______,  _______,  COLEMAK,   _______,  _______,   _______,  MU_TOG, MUV_DE, MUV_IN, MU_MOD, _______, \
+  RESET, AU_TOG, _______,  DVORAK,   _______,  _______, _______, _______,  _______, _______,  _______, _______, \
+  C(S(KC_ESC)), _______,  _______,  COLEMAK,   _______,  _______,   _______,  _______, _______, _______, _______, _______, \
   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______  \
 ),
 /* Numpad
@@ -287,38 +287,13 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     return state;
 }*/
 
+#ifdef AUDIO_ENABLE
 bool muse_mode = false;
 uint8_t last_muse_note = 0;
 uint16_t muse_counter = 0;
 uint8_t muse_offset = 70;
 uint16_t muse_tempo = 50;
-
-void encoder_update_user(uint8_t index, bool clockwise) {
-  if (muse_mode) {
-    if (IS_LAYER_ON(_RAISE)) {
-      if (clockwise) {
-        muse_offset++;
-      } else {
-        muse_offset--;
-      }
-    } else {
-      if (clockwise) {
-        muse_tempo+=1;
-      } else {
-        muse_tempo-=1;
-      }
-    }
-  } else {
-    if (clockwise) {
-      register_code(KC_PGDN);
-      unregister_code(KC_PGDN);
-    } else {
-      register_code(KC_PGUP);
-      unregister_code(KC_PGUP);
-    }
-  }
-}
-
+#endif
 
 void matrix_scan_user(void) {
 #ifdef AUDIO_ENABLE
@@ -339,16 +314,6 @@ void matrix_scan_user(void) {
         }
     }
 #endif
-}
-
-bool music_mask_user(uint16_t keycode) {
-  switch (keycode) {
-    case RAISE:
-    case NUMPAD:
-      return false;
-    default:
-      return true;
-  }
 }
 
 /*
