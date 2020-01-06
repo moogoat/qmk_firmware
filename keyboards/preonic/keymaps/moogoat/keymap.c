@@ -42,6 +42,10 @@ enum preonic_tapdance {
     TD_NUMPAD_LOCK = 1
 };
 
+// Songs
+float numpad_on[][2] = SONG(NUM_LOCK_ON_SOUND);
+float numpad_off[][2] = SONG(NUM_LOCK_OFF_SOUND);
+
 // Helpers
 
 // Random
@@ -222,7 +226,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   _______, _______, _______, _______, _______, _______, _______, _______, KC_P7, KC_P8, KC_P9, KC_PMNS,  \
   _______, _______, _______, _______, _______, _______, _______, _______, KC_P4, KC_P5, KC_P6, KC_PPLS, \
   _______, _______, _______, _______, _______, _______, _______, _______, KC_P1, KC_P2, KC_P3, KC_PENT, \
-  _______, _______, TG(_NUMPAD), _______, _______, KC_SPC,  KC_SPC, _______, KC_KP_0, KC_KP_0, KC_PDOT, KC_PENT  \
+  _______, _______, TD(TD_NUMPAD_LOCK), _______, _______, KC_SPC,  KC_SPC, _______, KC_KP_0, KC_KP_0, KC_PDOT, KC_PENT  \
 )
 
 
@@ -301,15 +305,27 @@ void matrix_scan_user(void) {
 #endif
 }
 
-void test_td(qk_tap_dance_state_t *state, void *user_data) {
-    char buf[256];
-    sprintf(buf, "count: %d, keycode: %d", state->count, state->keycode);
-    SEND_STRING(buf);
-    reset_tap_dance(state);
+// void test_td(qk_tap_dance_state_t *state, void *user_data) {
+//     char buf[256];
+//     sprintf(buf, "count: %d, keycode: %d", state->count, state->keycode);
+//     SEND_STRING(buf);
+//     reset_tap_dance(state);
+// }
+
+void toggle_numlock(qk_tap_dance_state_t *state, void *user_data) {
+    if(layer_state_is(_NUMPAD)) {
+        PLAY_SONG(numpad_off);
+        layer_off(_NUMPAD);
+    } else {
+        if(state->count >= 2) {
+            layer_on(_NUMPAD);
+            PLAY_SONG(numpad_on);
+        }
+    }
 }
 
 qk_tap_dance_action_t tap_dance_actions[] = {
-    [TD_NUMPAD_LOCK] = ACTION_TAP_DANCE_FN(test_td)
+    [TD_NUMPAD_LOCK] = ACTION_TAP_DANCE_FN(toggle_numlock)
 };
 
 /*
