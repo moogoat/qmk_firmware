@@ -1,4 +1,8 @@
 #define MAX_MACRO_SIZE 64 // workaround for no malloc. Dangerous!!
+#define TYPO_MAX_PROB 1000
+#define STICKY_CAP_PROB 120
+#define MISS_CAP_PROB 75
+#define SWITCH_CHAR_PROB 4
 
 enum moogoat_macro_codes {
     #ifdef MACRO_START
@@ -31,7 +35,8 @@ enum moogoat_macro_codes {
     m_honey,
     m_fu,
     m_er,
-    m_nka
+    m_nka,
+    m_fever
 };
 
 const char *moogoat_macros[][4] = {
@@ -61,7 +66,8 @@ const char *moogoat_macros[][4] = {
     {"Spoonful of honey PRN", "Spoonful of honey for cough PRN", "honey for cough PRN", 0},
     {"F/U PRN", "F/U if not better PRN", "F/U if not better or if getting worse", 0},
     {"Knows to go to ER if ", "ER if ", "To go to ER if ", 0},
-    {"NKA", "NKDA", "No allergies", 0}
+    {"NKA", "NKDA", "No allergies", 0},
+    {"No subj fever", "No fever/chills", "No subj fever/chills", "Denies fever/chills"}
 };
 
 uint8_t moogoat_grouplen(const char *group[]) {

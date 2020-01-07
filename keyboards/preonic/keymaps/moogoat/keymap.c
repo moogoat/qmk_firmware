@@ -16,7 +16,6 @@
 
 #include QMK_KEYBOARD_H
 #include "muse.h"
-#include "typo_funcs.c"
 #include <string.h>
 #include <ctype.h>
 
@@ -236,7 +235,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |      |      |      |      |asthma|      |      |      |iutd  |      |peds  |      |
  * |------+------+------+------+------+-------------+------+------+------+------+------|
- * |      |asthma|asthma|      |      |      |Health|      |      |      |      |      |
+ * |      |asthma|asthma|      |fever |      |Health|      |      |      |      |      |
  * |------+------+------+------+------+------|------+------+------+------+------+------|
  * |      |      |      |      |      |      |NKDA  |      |MCOMMA|MPER  |      |ENTER |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
@@ -246,7 +245,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_MACRO1] = LAYOUT_preonic_grid( \
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MACRO_DELETE, \
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TD(m_puffers), XXXXXXX, XXXXXXX, XXXXXXX, TD(m_iutd), XXXXXXX, TD(m_peds), XXXXXXX, \
-  XXXXXXX, TD(m_puffers), TD(m_puffers), XXXXXXX, XXXXXXX, XXXXXXX, TD(m_healthy), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
+  XXXXXXX, TD(m_puffers), TD(m_puffers), XXXXXXX, TD(m_fever), XXXXXXX, TD(m_healthy), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TD(m_nka), XXXXXXX, MACRO_COMMA, MACRO_PERIOD, XXXXXXX, KC_ENTER, \
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX  \
 ),
@@ -487,7 +486,8 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     [m_fu] = ACTION_TAP_DANCE_FN(process_macro),
     [m_er] = ACTION_TAP_DANCE_FN(process_macro),
     [m_abnThroat] = ACTION_TAP_DANCE_FN(process_macro),
-    [m_nka] = ACTION_TAP_DANCE_FN(process_macro)
+    [m_nka] = ACTION_TAP_DANCE_FN(process_macro),
+    [m_fever] = ACTION_TAP_DANCE_FN(process_macro)
 };
 
 /*
