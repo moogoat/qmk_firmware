@@ -16,7 +16,6 @@
 
 #include QMK_KEYBOARD_H
 #include "muse.h"
-
 #include "typo_funcs.c"
 
 enum preonic_layers {
@@ -26,7 +25,10 @@ enum preonic_layers {
   _ARROWS,
   _RAISE,
   _ADJUST,
-  _NUMPAD
+  _NUMPAD,
+  _MACRO1,
+  _MACRO2,
+  _MACRO3
 };
 
 enum preonic_keycodes {
@@ -38,9 +40,12 @@ enum preonic_keycodes {
 };
 
 #define TD_START_KEYCODE 0x5700 // this is from the source code, quantum_keycodes.h
+#define MACRO_START 1
 enum preonic_tapdance {
-    TD_NUMPAD_LOCK = 1
+    TD_NUMPAD_LOCK = 0
 };
+
+#include "macros.c"
 
 // Songs
 float numpad_on[][2] = SONG(NUM_LOCK_ON_SOUND);
@@ -61,7 +66,7 @@ int fastrand(void) {
 
 /* Blank
  * ,-----------------------------------------------------------------------------------.
- * |      |      |      |      |      |      |      |      |      |      |      |     |
+ * |      |      |      |      |      |      |      |      |      |      |      |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |      |      |      |      |      |      |      |      |      |      |      |      |
  * |------+------+------+------+------+-------------+------+------+------+------+------|
@@ -93,7 +98,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|------+------+------+------+------+------|
  * | Shift|   Z  |   X  |   C  |   V  |   B  |   N  |   M  |   ,  |   .  |   /  |Sh/Ent|
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * | CTRL | GUI  |Numpad| ALT  |Numpad|    Space    |Raise |   -  | Down |  Up  |Right |
+ * | CTRL | GUI  |Numpad| ALT  |Numpad|    Space    |Raise |   -  |MACRO1|MACRO2|MACRO3|
  * `-----------------------------------------------------------------------------------'
  */
 [_QWERTY] = LAYOUT_preonic_grid( \
@@ -101,7 +106,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,  \
   KC_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    LT(_ARROWS, KC_J),    KC_K,    KC_L,    KC_SCLN, KC_QUOT, \
   KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, MT(MOD_RSFT, KC_ENT),  \
-  KC_LCTL, KC_LGUI, TD(TD_NUMPAD_LOCK), KC_LALT, NUMPAD,   KC_SPC,  KC_SPC,  RAISE,   KC_MINS, KC_DOWN, KC_UP,   KC_RGHT  \
+  KC_LCTL, KC_LGUI, TD(TD_NUMPAD_LOCK), KC_LALT, NUMPAD,   KC_SPC,  KC_SPC,  RAISE, KC_MINS, MO(_MACRO1), MO(_MACRO2), MO(_MACRO3)  \
 ),
 
 /* Colemak
@@ -114,7 +119,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|------+------+------+------+------+------|
  * | Shift|   Z  |   X  |   C  |   V  |   B  |   K  |   M  |   ,  |   .  |   /  |Sh/Ent|
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * | CTRL | GUI  |Numpad| ALT  |Numpad|    Space    |Raise | Left | Down |  Up  |Right |
+ * | CTRL | GUI  |Numpad| ALT  |Numpad|    Space    |Raise |   -  |MACRO1|MACRO2|MACRO3|
  * `-----------------------------------------------------------------------------------'
  */
 [_COLEMAK] = LAYOUT_preonic_grid( \
@@ -122,7 +127,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TAB,  KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,    KC_J,    KC_L,    KC_U,    KC_Y,    KC_SCLN, KC_BSLS,  \
   KC_ESC,  KC_A,    KC_R,    KC_S,    KC_T,    KC_D,    KC_H,    LT(_ARROWS, KC_N),    KC_E,    KC_I,    KC_O,    KC_QUOT, \
   KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, MT(MOD_RSFT, KC_ENT),  \
-  KC_LCTL, KC_LGUI, TD(TD_NUMPAD_LOCK), KC_LALT, NUMPAD,   KC_SPC,  KC_SPC,  RAISE,   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT  \
+  KC_LCTL, KC_LGUI, TD(TD_NUMPAD_LOCK), KC_LALT, NUMPAD,   KC_SPC,  KC_SPC,  RAISE, KC_MINS, MO(_MACRO1), MO(_MACRO2), MO(_MACRO3)  \
 ),
 
 /* Dvorak
@@ -135,7 +140,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|------+------+------+------+------+------|
  * | Shift|   ;  |   Q  |   J  |   K  |   X  |   B  |   M  |   W  |   V  |   Z  |Sh/Ent|
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * | CTRL | GUI  |Numpad| ALT  |Numpad|    Space    |Raise | Left | Down |  Up  |Right |
+ * | CTRL | GUI  |Numpad| ALT  |Numpad|    Space    |Raise |   -  |MACRO1|MACRO2|MACRO3|
  * `-----------------------------------------------------------------------------------'
  */
 [_DVORAK] = LAYOUT_preonic_grid( \
@@ -143,7 +148,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TAB,  KC_QUOT, KC_COMM, KC_DOT,  KC_P,    KC_Y,    KC_F,    KC_G,    KC_C,    KC_R,    KC_L,    KC_BSLS,  \
   KC_ESC,  KC_A,    KC_O,    KC_E,    KC_U,    KC_I,    KC_D,    LT(_ARROWS, KC_H),    KC_T,    KC_N,    KC_S,    KC_SLSH, \
   KC_LSFT, KC_SCLN, KC_Q,    KC_J,    KC_K,    KC_X,    KC_B,    KC_M,    KC_W,    KC_V,    KC_Z,    MT(MOD_RSFT, KC_ENT),  \
-  KC_LCTL, KC_LGUI, TD(TD_NUMPAD_LOCK), KC_LALT, NUMPAD,   KC_SPC,  KC_SPC,  RAISE,   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT  \
+  KC_LCTL, KC_LGUI, TD(TD_NUMPAD_LOCK), KC_LALT, NUMPAD,   KC_SPC,  KC_SPC,  RAISE, KC_MINS, MO(_MACRO1), MO(_MACRO2), MO(_MACRO3)  \
 ),
 
 /* Arrows
@@ -227,8 +232,72 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   _______, _______, _______, _______, _______, _______, _______, _______, KC_P4, KC_P5, KC_P6, KC_PPLS, \
   _______, _______, _______, _______, _______, _______, _______, _______, KC_P1, KC_P2, KC_P3, KC_PENT, \
   _______, _______, TD(TD_NUMPAD_LOCK), _______, _______, KC_SPC,  KC_SPC, _______, KC_KP_0, KC_KP_0, KC_PDOT, KC_PENT  \
-)
+),
 
+/*  Macro 1 - History Macros
+ * ,-----------------------------------------------------------------------------------.
+ * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * |------+------+------+------+------+-------------+------+------+------+------+------|
+ * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * |------+------+------+------+------+------|------+------+------+------+------+------|
+ * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      |      |      |      |      |             |      |      |      |      |      |
+ * `-----------------------------------------------------------------------------------'
+ */
+[_MACRO1] = LAYOUT_preonic_grid( \
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX  \
+),
+
+/* Macro 2 - Physical macros, normal
+ * ,-----------------------------------------------------------------------------------.
+ * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      |      |well  |      |      |throat|      |      |      |      |      |      |
+ * |------+------+------+------+------+-------------+------+------+------+------+------|
+ * |      |      |      |      |      |      |      |      |      |noLymp|      |      |
+ * |------+------+------+------+------+------|------+------+------+------+------+------|
+ * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      |      |      |      |      |             |      |      |      |      |      |
+ * `-----------------------------------------------------------------------------------'
+ */
+
+[_MACRO2] = LAYOUT_preonic_grid( \
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
+  XXXXXXX, XXXXXXX, TD(m_wellNAD), XXXXXXX, XXXXXXX, TD(m_nThroat), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TD(m_noLymph), XXXXXXX, XXXXXXX, \
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX  \
+),
+
+/* Macro 3 - Misc macros/Abn physical macros
+ * ,-----------------------------------------------------------------------------------.
+ * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      |      |      |      |      |throat|      |      |      |      |      |      |
+ * |------+------+------+------+------+-------------+------+------+------+------+------|
+ * |      |      |      |      |      |      |      |      |      |lymph |      |      |
+ * |------+------+------+------+------+------|------+------+------+------+------+------|
+ * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      |      |      |      |      |             |      |      |      |      |      |
+ * `-----------------------------------------------------------------------------------'
+ */
+
+[_MACRO3] = LAYOUT_preonic_grid( \
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TD(m_abnThroat), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TD(m_lymph), XXXXXXX, XXXXXXX, \
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX  \
+)
 
 };
 
@@ -324,8 +393,25 @@ void toggle_numlock(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
+void process_macro(qk_tap_dance_state_t *state, void *user_data) {
+    uint8_t count = state->count;
+    const char **group = moogoat_getMacro(state->keycode-TD_START_KEYCODE);
+    uint8_t len = moogoat_grouplen(group);
+    if(count == 1) {
+        fast_srand(timer_read());
+        SEND_STRING(group[fastrand()%len]);
+    } else {
+        SEND_STRING(group[(count-2)%len]);
+    }
+}
+
 qk_tap_dance_action_t tap_dance_actions[] = {
-    [TD_NUMPAD_LOCK] = ACTION_TAP_DANCE_FN(toggle_numlock)
+    [TD_NUMPAD_LOCK] = ACTION_TAP_DANCE_FN(toggle_numlock),
+    [m_wellNAD] = ACTION_TAP_DANCE_FN(process_macro),
+    [m_lymph] = ACTION_TAP_DANCE_FN(process_macro),
+    [m_noLymph] = ACTION_TAP_DANCE_FN(process_macro),
+    [m_nThroat] = ACTION_TAP_DANCE_FN(process_macro),
+    [m_abnThroat] = ACTION_TAP_DANCE_FN(process_macro)
 };
 
 /*
