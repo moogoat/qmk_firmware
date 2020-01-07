@@ -1,3 +1,5 @@
+#define MAX_MACRO_SIZE 64 // workaround for no malloc. Dangerous!!
+
 enum moogoat_macro_codes {
     #ifdef MACRO_START
     m_wellNAD = MACRO_START,
@@ -29,11 +31,12 @@ enum moogoat_macro_codes {
     m_honey,
     m_fu,
     m_er,
+    m_nka
 };
 
 const char *moogoat_macros[][4] = {
     {"Well NAD", "Well, NAD", 0, 0},
-    {"Scattered lymphadenopathy", "Scattered LA", "Scattered LA, cervical", "Scattered lymphadenopathy, cervical"},
+    {"Scattered LA", "Scattered lymphadenopathy", "Scattered LA, cervical", "Scattered lymphadenopathy, cervical"},
     {"No LA", "No lymphadenopathy", 0, 0},
     {"Throat normal", "Throat not red", "Throat not red, no exudates", 0},
     {"Throat red", "Throat red, swollen tonsils", "Throat red, exudates present", 0},
@@ -56,8 +59,9 @@ const char *moogoat_macros[][4] = {
     {"Nonsmoker, no puffers, no asthma", "No puffers, no asthma, nonsmoker", "Nonsmoker, no asthma, no puffers", "No asthma, nonsmoker, no puffers"},
     {"Advil/tylenol PRN", "Ibuprofen/acetaminophen PRN", "advil/tylenol prn", 0},
     {"Spoonful of honey PRN", "Spoonful of honey for cough PRN", "honey for cough PRN", 0},
-    {"F/U PRN", "F/U if not better PRN", "F/U if not better of if getting worse", 0},
-    {"Knows to go to ER if ", "ER if ", "To go to ER if ", 0}
+    {"F/U PRN", "F/U if not better PRN", "F/U if not better or if getting worse", 0},
+    {"Knows to go to ER if ", "ER if ", "To go to ER if ", 0},
+    {"NKA", "NKDA", "No allergies", 0}
 };
 
 uint8_t moogoat_grouplen(const char *group[]) {

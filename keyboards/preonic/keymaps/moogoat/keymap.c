@@ -17,6 +17,8 @@
 #include QMK_KEYBOARD_H
 #include "muse.h"
 #include "typo_funcs.c"
+#include <string.h>
+#include <ctype.h>
 
 enum preonic_layers {
   _QWERTY = 0,
@@ -236,7 +238,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+-------------+------+------+------+------+------|
  * |      |asthma|asthma|      |      |      |Health|      |      |      |      |      |
  * |------+------+------+------+------+------|------+------+------+------+------+------|
- * |      |      |      |      |      |      |      |      |MCOMMA|MPER  |      |ENTER |
+ * |      |      |      |      |      |      |NKDA  |      |MCOMMA|MPER  |      |ENTER |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |      |      |      |      |      |             |      |      |      |      |      |
  * `-----------------------------------------------------------------------------------'
@@ -245,7 +247,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MACRO_DELETE, \
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TD(m_puffers), XXXXXXX, XXXXXXX, XXXXXXX, TD(m_iutd), XXXXXXX, TD(m_peds), XXXXXXX, \
   XXXXXXX, TD(m_puffers), TD(m_puffers), XXXXXXX, XXXXXXX, XXXXXXX, TD(m_healthy), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MACRO_COMMA, MACRO_PERIOD, XXXXXXX, KC_ENTER, \
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TD(m_nka), XXXXXXX, MACRO_COMMA, MACRO_PERIOD, XXXXXXX, KC_ENTER, \
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX  \
 ),
 
@@ -431,7 +433,29 @@ void process_macro(qk_tap_dance_state_t *state, void *user_data) {
         toSend = group[(count-2)%len];
     }
     m_lastNumChars = strlen(toSend);
-    SEND_STRING(toSend);
+    if(m_lastNumChars > 1 && m_lastNumChars < MAX_MACRO_SIZE) {
+        char typoSend[MAX_MACRO_SIZE] = {0};
+        typoSend[0] = ((rand()%TYPO_MAX_PROB) < MISS_CAP_PROB && islower(toSend[1]) > 0) ? tolower(toSend[0]) : toSend[0];
+        for(size_t i=1; i<m_lastNumChars; ++i) {
+            int x = rand()%TYPO_MAX_PROB;
+            char prev = toSend[i-1];
+            char curr = toSend[i];
+            typoSend[i] = curr;
+            if(isupper(curr)) {
+                if(isupper(prev) == 0 && i < m_lastNumChars-1 && isupper(toSend[i+1]) == 0) {
+                    typoSend[i] = (x<MISS_CAP_PROB) ? tolower(curr) : curr;
+                }
+            } else if(islower(curr) && i>0) {
+                if(isupper(prev) > 0 && x<STICKY_CAP_PROB) {
+                    typoSend[i] = toupper(curr);
+                } else if(islower(curr) > 0 && islower(prev) > 0 && x<SWITCH_CHAR_PROB) {
+                    typoSend[i-1] = curr;
+                    typoSend[i] = prev;
+                }
+            }
+        }
+        SEND_STRING(typoSend);
+    }
     reset_tap_dance(state);
 }
 
@@ -462,7 +486,8 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     [m_honey] = ACTION_TAP_DANCE_FN(process_macro),
     [m_fu] = ACTION_TAP_DANCE_FN(process_macro),
     [m_er] = ACTION_TAP_DANCE_FN(process_macro),
-    [m_abnThroat] = ACTION_TAP_DANCE_FN(process_macro)
+    [m_abnThroat] = ACTION_TAP_DANCE_FN(process_macro),
+    [m_nka] = ACTION_TAP_DANCE_FN(process_macro)
 };
 
 /*

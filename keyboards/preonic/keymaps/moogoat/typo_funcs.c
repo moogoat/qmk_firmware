@@ -1,6 +1,12 @@
 #include <string.h>
 #include <ctype.h> // for uppercase/lowercase functions
 
+// probs out of 1000
+#define TYPO_MAX_PROB 1000
+#define STICKY_CAP_PROB 120
+#define MISS_CAP_PROB 75
+#define SWITCH_CHAR_PROB 4
+
 // #define TESTING_FUNCTIONS
 
 #ifdef TESTING_FUNCTIONS
