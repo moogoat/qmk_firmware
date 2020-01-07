@@ -58,17 +58,6 @@ float numpad_off[][2] = SONG(NUM_LOCK_OFF_SOUND);
 // Helpers
 uint16_t m_lastNumChars = 0;
 
-// Random
-static unsigned int g_seed;
-void fast_srand(int seed) {
-    if(g_seed == 0) g_seed = seed;
-}
-
-int fastrand(void) {
-    g_seed = (214013*g_seed+2531011);
-    return (g_seed>>16)&0x7FFF;
-}
-
 /* Blank
  * ,-----------------------------------------------------------------------------------.
  * |      |      |      |      |      |      |      |      |      |      |      |      |
@@ -306,6 +295,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 };
 
+void keyboard_post_init_user(void) {
+    srand(timer_read32());
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
         case QWERTY:
@@ -433,8 +426,7 @@ void process_macro(qk_tap_dance_state_t *state, void *user_data) {
     uint8_t len = moogoat_grouplen(group);
     const char *toSend;
     if(count == 1) {
-        fast_srand(timer_read());
-        toSend = group[fastrand()%len];
+        toSend = group[rand()%len];
     } else {
         toSend = group[(count-2)%len];
     }
