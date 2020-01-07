@@ -36,7 +36,8 @@ enum preonic_keycodes {
   COLEMAK,
   DVORAK,
   NUMPAD,
-  RAISE
+  RAISE,
+  MACRO_DELETE
 };
 
 #define TD_START_KEYCODE 0x5700 // this is from the source code, quantum_keycodes.h
@@ -52,6 +53,7 @@ float numpad_on[][2] = SONG(NUM_LOCK_ON_SOUND);
 float numpad_off[][2] = SONG(NUM_LOCK_OFF_SOUND);
 
 // Helpers
+uint16_t m_lastNumChars = 0;
 
 // Random
 static unsigned int g_seed;
@@ -236,7 +238,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /*  Macro 1 - History Macros
  * ,-----------------------------------------------------------------------------------.
- * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * |      |      |      |      |      |      |      |      |      |      |      |MDEL  |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |      |      |      |      |      |      |      |      |      |      |      |      |
  * |------+------+------+------+------+-------------+------+------+------+------+------|
@@ -248,7 +250,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * `-----------------------------------------------------------------------------------'
  */
 [_MACRO1] = LAYOUT_preonic_grid( \
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MACRO_DELETE, \
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
@@ -257,7 +259,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /* Macro 2 - Physical macros, normal
  * ,-----------------------------------------------------------------------------------.
- * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * |      |      |      |      |      |      |      |      |      |      |      |MDEL  |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |      |      |well  |      |      |throat|      |      |      |      |      |      |
  * |------+------+------+------+------+-------------+------+------+------+------+------|
@@ -270,7 +272,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 
 [_MACRO2] = LAYOUT_preonic_grid( \
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MACRO_DELETE, \
   XXXXXXX, XXXXXXX, TD(m_wellNAD), XXXXXXX, XXXXXXX, TD(m_nThroat), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TD(m_noLymph), XXXXXXX, XXXXXXX, \
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
@@ -279,7 +281,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /* Macro 3 - Misc macros/Abn physical macros
  * ,-----------------------------------------------------------------------------------.
- * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * |      |      |      |      |      |      |      |      |      |      |      |MDEL  |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |      |      |      |      |      |throat|      |      |      |      |      |      |
  * |------+------+------+------+------+-------------+------+------+------+------+------|
@@ -292,7 +294,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 
 [_MACRO3] = LAYOUT_preonic_grid( \
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MACRO_DELETE, \
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TD(m_abnThroat), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TD(m_lymph), XXXXXXX, XXXXXXX, \
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
@@ -341,6 +343,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           }
           return false;
           break;
+        case MACRO_DELETE:
+            if(record->event.pressed) {
+                // char buf[];
+                // sprintf(buf, "%u", m_lastNumChars);
+                // SEND_STRING(buf);
+                for(int i=0; i<m_lastNumChars; ++i) {
+                    tap_code(KC_BSPC);
+                }
+            }
+            return false;
+            break;
       }
     return true;
 };
@@ -397,12 +410,16 @@ void process_macro(qk_tap_dance_state_t *state, void *user_data) {
     uint8_t count = state->count;
     const char **group = moogoat_getMacro(state->keycode-TD_START_KEYCODE);
     uint8_t len = moogoat_grouplen(group);
+    const char *toSend;
     if(count == 1) {
         fast_srand(timer_read());
-        SEND_STRING(group[fastrand()%len]);
+        toSend = group[fastrand()%len];
     } else {
-        SEND_STRING(group[(count-2)%len]);
+        toSend = group[(count-2)%len];
     }
+    m_lastNumChars = strlen(toSend);
+    SEND_STRING(toSend);
+    reset_tap_dance(state);
 }
 
 qk_tap_dance_action_t tap_dance_actions[] = {
