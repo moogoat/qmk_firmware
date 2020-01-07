@@ -37,7 +37,10 @@ enum preonic_keycodes {
   DVORAK,
   NUMPAD,
   RAISE,
-  MACRO_DELETE
+  MACRO_DELETE,
+  ICD9,
+  MACRO_COMMA,
+  MACRO_PERIOD
 };
 
 #define TD_START_KEYCODE 0x5700 // this is from the source code, quantum_keycodes.h
@@ -240,42 +243,42 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * ,-----------------------------------------------------------------------------------.
  * |      |      |      |      |      |      |      |      |      |      |      |MDEL  |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * |      |      |      |      |asthma|      |      |      |iutd  |      |peds  |      |
  * |------+------+------+------+------+-------------+------+------+------+------+------|
- * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * |      |asthma|asthma|      |      |      |Health|      |      |      |      |      |
  * |------+------+------+------+------+------|------+------+------+------+------+------|
- * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * |      |      |      |      |      |      |      |      |MCOMMA|MPER  |      |ENTER |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |      |      |      |      |      |             |      |      |      |      |      |
  * `-----------------------------------------------------------------------------------'
  */
 [_MACRO1] = LAYOUT_preonic_grid( \
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MACRO_DELETE, \
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TD(m_puffers), XXXXXXX, XXXXXXX, XXXXXXX, TD(m_iutd), XXXXXXX, TD(m_peds), XXXXXXX, \
+  XXXXXXX, TD(m_puffers), TD(m_puffers), XXXXXXX, XXXXXXX, XXXXXXX, TD(m_healthy), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MACRO_COMMA, MACRO_PERIOD, XXXXXXX, KC_ENTER, \
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX  \
 ),
 
 /* Macro 2 - Physical macros, normal
  * ,-----------------------------------------------------------------------------------.
- * |      |      |      |      |      |      |      |      |      |      |      |MDEL  |
+ * |      |      |      |impuls|      |      |sensat|      |      |      |legs  |MDEL  |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      |      |well  |      |      |throat|      |      |      |      |      |      |
+ * |      |      |well  |TM    |resp  |throat|motor |      |      |      |pulses|      |
  * |------+------+------+------+------+-------------+------+------+------+------+------|
- * |      |      |      |      |      |      |      |      |      |noLymp|      |      |
+ * |      |abdo  |sinus |      |afeb  |      |reflex|      |      |noLymp|      |      |
  * |------+------+------+------+------+------|------+------+------+------+------+------|
- * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * |      |      |      |cv    |      |      |   cn |      |MCOMMA|MPER  |      |ENTER |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |      |      |      |      |      |             |      |      |      |      |      |
  * `-----------------------------------------------------------------------------------'
  */
 
 [_MACRO2] = LAYOUT_preonic_grid( \
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MACRO_DELETE, \
-  XXXXXXX, XXXXXXX, TD(m_wellNAD), XXXXXXX, XXXXXXX, TD(m_nThroat), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TD(m_noLymph), XXXXXXX, XXXXXXX, \
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
+  XXXXXXX, XXXXXXX, XXXXXXX, TD(m_headImpulse), XXXXXXX, XXXXXXX, TD(m_sensation), XXXXXXX, XXXXXXX, XXXXXXX, TD(m_legs), MACRO_DELETE, \
+  XXXXXXX, XXXXXXX, TD(m_wellNAD), TD(m_eardrums), TD(m_resp), TD(m_nThroat), TD(m_motor), XXXXXXX, XXXXXXX, XXXXXXX, TD(m_pulses), XXXXXXX, \
+  XXXXXXX, TD(m_abdo), TD(m_sinus), XXXXXXX, TD(m_afebrile), XXXXXXX, TD(m_reflexes), XXXXXXX, XXXXXXX, TD(m_noLymph), XXXXXXX, XXXXXXX, \
+  XXXXXXX, XXXXXXX, XXXXXXX, TD(m_cv), XXXXXXX, XXXXXXX, TD(m_cn), XXXXXXX, MACRO_COMMA, MACRO_PERIOD, XXXXXXX, KC_ENTER, \
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX  \
 ),
 
@@ -283,11 +286,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * ,-----------------------------------------------------------------------------------.
  * |      |      |      |      |      |      |      |      |      |      |      |MDEL  |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      |      |      |      |      |throat|      |      |      |      |      |      |
+ * |      |ICD9  |      |er    |      |throat|      |      |      |      |      |      |
  * |------+------+------+------+------+-------------+------+------+------+------+------|
- * |      |      |      |      |      |      |      |      |      |lymph |      |      |
+ * |      |advil |      |      |fu    |      |honey |      |      |lymph |      |      |
  * |------+------+------+------+------+------|------+------+------+------+------+------|
- * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * |      |      |      |      |      |      |      |      |MCOMMA|MPER  |      |ENTER |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |      |      |      |      |      |             |      |      |      |      |      |
  * `-----------------------------------------------------------------------------------'
@@ -295,9 +298,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_MACRO3] = LAYOUT_preonic_grid( \
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MACRO_DELETE, \
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TD(m_abnThroat), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TD(m_lymph), XXXXXXX, XXXXXXX, \
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
+  XXXXXXX, ICD9, XXXXXXX, TD(m_er), XXXXXXX, TD(m_abnThroat), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
+  XXXXXXX, TD(m_prns), XXXXXXX, XXXXXXX, TD(m_fu), XXXXXXX, TD(m_honey), XXXXXXX, XXXXXXX, TD(m_lymph), XXXXXXX, XXXXXXX, \
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MACRO_COMMA, MACRO_PERIOD, XXXXXXX, KC_ENTER, \
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX  \
 )
 
@@ -351,6 +354,24 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 for(int i=0; i<m_lastNumChars; ++i) {
                     tap_code(KC_BSPC);
                 }
+            }
+            return false;
+            break;
+        case MACRO_COMMA:
+            if(record->event.pressed) {
+                SEND_STRING(", ");
+            }
+            return false;
+            break;
+        case MACRO_PERIOD:
+            if(record->event.pressed) {
+                SEND_STRING(". ");
+            }
+            return false;
+            break;
+        case ICD9:
+            if(record->event.pressed) {
+                SEND_STRING(" icd9"SS_LALT(SS_TAP(X_ENTER)));
             }
             return false;
             break;
@@ -428,6 +449,27 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     [m_lymph] = ACTION_TAP_DANCE_FN(process_macro),
     [m_noLymph] = ACTION_TAP_DANCE_FN(process_macro),
     [m_nThroat] = ACTION_TAP_DANCE_FN(process_macro),
+    [m_eardrums] = ACTION_TAP_DANCE_FN(process_macro),
+    [m_sinus] = ACTION_TAP_DANCE_FN(process_macro),
+    [m_afebrile] = ACTION_TAP_DANCE_FN(process_macro),
+    [m_cv] = ACTION_TAP_DANCE_FN(process_macro),
+    [m_resp] = ACTION_TAP_DANCE_FN(process_macro),
+    [m_abdo] = ACTION_TAP_DANCE_FN(process_macro),
+    [m_legs] = ACTION_TAP_DANCE_FN(process_macro),
+    [m_pulses] = ACTION_TAP_DANCE_FN(process_macro),
+    [m_cn] = ACTION_TAP_DANCE_FN(process_macro),
+    [m_reflexes] = ACTION_TAP_DANCE_FN(process_macro),
+    [m_motor] = ACTION_TAP_DANCE_FN(process_macro),
+    [m_sensation] = ACTION_TAP_DANCE_FN(process_macro),
+    [m_headImpulse] = ACTION_TAP_DANCE_FN(process_macro),
+    [m_iutd] = ACTION_TAP_DANCE_FN(process_macro),
+    [m_healthy] = ACTION_TAP_DANCE_FN(process_macro),
+    [m_peds] = ACTION_TAP_DANCE_FN(process_macro),
+    [m_puffers] = ACTION_TAP_DANCE_FN(process_macro),
+    [m_prns] = ACTION_TAP_DANCE_FN(process_macro),
+    [m_honey] = ACTION_TAP_DANCE_FN(process_macro),
+    [m_fu] = ACTION_TAP_DANCE_FN(process_macro),
+    [m_er] = ACTION_TAP_DANCE_FN(process_macro),
     [m_abnThroat] = ACTION_TAP_DANCE_FN(process_macro)
 };
 

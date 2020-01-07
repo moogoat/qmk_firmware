@@ -7,7 +7,28 @@ enum moogoat_macro_codes {
     m_lymph,
     m_noLymph,
     m_nThroat,
-    m_abnThroat
+    m_abnThroat,
+    m_eardrums,
+    m_sinus,
+    m_afebrile,
+    m_cv,
+    m_resp,
+    m_abdo,
+    m_legs,
+    m_pulses,
+    m_cn,
+    m_reflexes,
+    m_motor,
+    m_sensation,
+    m_headImpulse,
+    m_iutd,
+    m_healthy,
+    m_peds,
+    m_puffers,
+    m_prns,
+    m_honey,
+    m_fu,
+    m_er,
 };
 
 const char *moogoat_macros[][4] = {
@@ -16,7 +37,27 @@ const char *moogoat_macros[][4] = {
     {"No LA", "No lymphadenopathy", 0, 0},
     {"Throat normal", "Throat not red", "Throat not red, no exudates", 0},
     {"Throat red", "Throat red, swollen tonsils", "Throat red, exudates present", 0},
-    {0, 0, 0, 0}
+    {"TM normal", "TM normal b/l", "TM normal bilateral", "TM normal bilaterally"},
+    {"No facial tenderness", "Nontender to facial tap", "No facial tap tenderness", 0},
+    {"Afeb", "Afebrile", "No fever", 0},
+    {"CV normal", "CV normal s1/s2", "CV normal s1/s2, no s3/s4/m", 0},
+    {"Resp clear", "Resp clear, GAEBL", "Resp clear, no wheeze", "Resp no crackles, wheeze"},
+    {"Abdo SNT", "Abdo soft, nontender", "Abdo soft, nontender, nondistended", "Abdo soft, nontender, no distension, no megaly"},
+    {"Legs normal", "Legs normal, no swelling", "Legs normal, no pitting edema", 0},
+    {"Pulses normal", "Peripheral pulses normal", "Peripheral pulses symmetrical x4", 0},
+    {"CN screening normal", "CN II-XII normal, PERL", 0, 0},
+    {"Reflexes 2+ b/l", "Reflexes 2+ b/l, symmetrical", "Reflexes 2+ b/l upper/lower limbs", 0},
+    {"Moving all 4 limbs", "Upper/lower motor strong", "Upper/lower motor strong, symmetrical", "Upper/lower motor 5/5, symmetrical"},
+    {"Sensation intact", "Sensation intact b/l", 0, 0},
+    {"Positive head impulse", "Positive head impulse to the L", "Positive head impulse to the R", 0},
+    {"IUTD", "Imm UTD", "Immunizations UTD", 0},
+    {"Healthy", "Healthy otherwise", "Otherwise healthy", "No other medical issues"},
+    {"Normal growth/devel", "Normal growth and development", "Good growth/devel", "Good growth and development"},
+    {"Nonsmoker, no puffers, no asthma", "No puffers, no asthma, nonsmoker", "Nonsmoker, no asthma, no puffers", "No asthma, nonsmoker, no puffers"},
+    {"Advil/tylenol PRN", "Ibuprofen/acetaminophen PRN", "advil/tylenol prn", 0},
+    {"Spoonful of honey PRN", "Spoonful of honey for cough PRN", "honey for cough PRN", 0},
+    {"F/U PRN", "F/U if not better PRN", "F/U if not better of if getting worse", 0},
+    {"Knows to go to ER if ", "ER if ", "To go to ER if ", 0}
 };
 
 uint8_t moogoat_grouplen(const char *group[]) {
