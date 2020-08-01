@@ -19,3 +19,4 @@
 // place overrides here
 #define MK_MOMENTARY_ACCEL
 #define TAPPING_TERM 200
+#define TAPPING_TOGGLE 3
