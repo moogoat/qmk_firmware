@@ -46,8 +46,20 @@ enum tap_dance_keycodes {
 #define KC_CAD C(A(KC_DEL))
 
 // Other things
-// static uint16_t sleep_timer;
-// static uint16_t wpm_timer;
+static uint32_t sleep_timer;
+static bool is_asleep;
+static uint32_t wpm_check_timer;
+
+#define SLEEP_TIMEOUT 120000
+
+// Helpers
+void reset_sleep_status(void) {
+    if(is_asleep) {
+        rgblight_enable();
+        is_asleep = false;
+    }
+    sleep_timer = timer_read32();
+}
 
 /* BLANK
  * .--------------------------------------------------------------------------------------------------------------------------------------.
@@ -247,15 +259,26 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           SEND_STRING("00");
       }
       break;
+    default:
+      reset_sleep_status();
+      break;
   }
   return true;
 }
 
 void matrix_init_user(void) {
-
+    sleep_timer = timer_read32();
+    wpm_check_timer = sleep_timer;
+    is_asleep = false;
 }
 
 void matrix_scan_user(void) {
+    if(!is_asleep) {
+        if(timer_elapsed32(sleep_timer) > SLEEP_TIMEOUT) {
+            rgblight_disable();
+            is_asleep = true;
+        }
+    }
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
