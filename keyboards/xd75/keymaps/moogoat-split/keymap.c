@@ -115,7 +115,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_LS] = LAYOUT_ortho_5x15(
     _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______, _______, _______, KC_EQL,  KC_PLUS,
-    _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______, _______, _______, _______, _______,
+    _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______, _______, _______, _______, KC_DEL,
     _______, _______, KC_LABK, KC_LCBR, KC_LPRN, KC_LBRC, _______, _______, _______,  KC_RBRC, KC_RPRN, KC_RCBR, KC_RABK, _______, _______,
     _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______, _______, _______, _______, _______,
     _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______, _______, _______, _______, _______
@@ -248,13 +248,32 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 void matrix_init_user(void) {
-
 }
 
 void matrix_scan_user(void) {
+}
 
+layer_state_t layer_state_set_user(layer_state_t state) {
+    switch (get_highest_layer(state)) {
+        case _QW:
+            rgblight_sethsv(HSV_CYAN);
+            rgblight_mode(RGBLIGHT_MODE_RAINBOW_MOOD);
+            eeprom_update_byte(EECONFIG_VELOCIKEY, 1);
+            break;
+        case _FN:
+            rgblight_mode(RGBLIGHT_MODE_STATIC_LIGHT);
+            eeprom_update_byte(EECONFIG_VELOCIKEY, 0);
+            rgblight_sethsv(HSV_RED);
+            break;
+        case _NP:
+            rgblight_mode(RGBLIGHT_MODE_STATIC_LIGHT);
+            eeprom_update_byte(EECONFIG_VELOCIKEY, 0);
+            rgblight_sethsv(HSV_GREEN);
+            break;
+    }
+    return state;
 }
 
 void led_set_user(uint8_t usb_led) {
-
+    //rgblight_set_layer_state(0, led_state.caps_lock);
 }
