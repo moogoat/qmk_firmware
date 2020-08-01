@@ -74,3 +74,6 @@ __pycache__
 # prerequisites for updating ChibiOS
 /util/fmpp*
 keyboards/preonic/keymaps/moogoat/hello
+
+# Allow to exist but don't include it in the repo
+user_song_list.h
