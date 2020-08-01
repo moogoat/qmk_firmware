@@ -18,8 +18,9 @@
 
 // place overrides here
 #define MK_MOMENTARY_ACCEL
-#define TAPPING_TERM 175
 
+#define TAPPING_TERM 175
+#define TAPPING_TERM_PER_KEY
 #define PERMISSIVE_HOLD_PER_KEY
 #define IGNORE_MOD_TAP_INTERRUPT_PER_KEY
 

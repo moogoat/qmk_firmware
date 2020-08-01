@@ -283,6 +283,15 @@ void led_set_user(uint8_t usb_led) {
     //rgblight_set_layer_state(0, led_state.caps_lock);
 }
 
+uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case KC_LS:
+            return 100;
+        default:
+            return TAPPING_TERM;
+    }
+}
+
 bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         default: return false;
