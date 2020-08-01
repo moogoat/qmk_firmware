@@ -46,8 +46,8 @@ enum tap_dance_keycodes {
 #define KC_CAD C(A(KC_DEL))
 
 // Other things
-//static uint16_t sleep_timer;
-//static uint16_t wpm_timer;
+// static uint16_t sleep_timer;
+// static uint16_t wpm_timer;
 
 /* BLANK
  * .--------------------------------------------------------------------------------------------------------------------------------------.
@@ -281,4 +281,18 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
 void led_set_user(uint8_t usb_led) {
     //rgblight_set_layer_state(0, led_state.caps_lock);
+}
+
+bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        default: return false;
+    }
+}
+
+bool get_ignore_mod_tap_interrupt(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode ) {
+        case KC_SHEN:
+            return true;
+        default: return false;
+    }
 }
