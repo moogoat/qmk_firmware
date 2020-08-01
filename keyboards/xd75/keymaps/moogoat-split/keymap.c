@@ -44,6 +44,7 @@ enum tap_dance_keycodes {
 #define KC_FLAY LT(_FL, KC_F)
 #define KC_JLAY LT(_JL, KC_J)
 #define KC_CAD C(A(KC_DEL))
+#define KC_MIPL LT(_LS, KC_MINS)
 
 // Other things
 static uint32_t sleep_timer;
@@ -309,7 +310,7 @@ void led_set_user(uint8_t usb_led) {
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case KC_LS:
-            return 100;
+            return 125;
         default:
             return TAPPING_TERM;
     }
@@ -317,6 +318,9 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 
 bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
+        case KC_LS:
+        case KC_SHEN:
+            return true;
         default: return false;
     }
 }
