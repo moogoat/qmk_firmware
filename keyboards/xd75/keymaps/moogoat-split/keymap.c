@@ -14,6 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include QMK_KEYBOARD_H
+#define XD75_KEYCAPS_LED 5  // F5
 
 // Layer shorthand
 enum custom_layers {
@@ -21,19 +22,25 @@ enum custom_layers {
     _LS,
     _JL,
     _FL,
-    _FN
+    _FN,
 };
 
 // Defines the keycodes used by our macros in process_record_user
 enum custom_keycodes {
   QMKBEST = SAFE_RANGE,
-  QMKURL
+  QMKURL,
+};
+
+// Tap Dance defintions
+enum tap_dance_keycodes {
+    TD_DEV,
 };
 
 // Custom keycode definitions
 #define KC_SHEN MT(MOD_RSFT, KC_ENT)
 #define KC_FLAY LT(_FL, KC_F)
 #define KC_JLAY LT(_JL, KC_J)
+#define KC_CAD C(A(KC_DEL))
 
 /* BLANK
  * .--------------------------------------------------------------------------------------------------------------------------------------.
@@ -137,45 +144,55 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * .--------------------------------------------------------------------------------------------------------------------------------------.
  * |        |        |        |        |        |        |        |        |        | Home   |        |        |        |        |        |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+-----------------|
- * |        |        |        |        |        |        |        |        |        | Pgup   |        | MUp    |        | WheelU |        |
+ * |        |Speed0  | Speed1 | Speed2 |        |        |        |        |        | Pgup   |        | MUp    |        | WheelU |        |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+-----------------+--------|
  * |        |        |        |        |        |        |        |        |        | Pgdn   | MLeft  | MDown  | MRight | WheelD |        |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------------------------+--------|
- * | Speed2 |        |        |        |        |        |        |        |        | End    |        |        |        |        | Speed1 |
+ * |        |        |        |        |        |        |        |        |        | End    |        |        |        |        |        |
  * |--------+--------+--------+--------+--------+-----------------+--------+--------+--------+--------+-----------------+--------+--------|
- * | Speed0 |        |        |        | M Right Button  |        |        |        | M Left Button   |        |                 |        |
+ * |        |        |        |        | M Right Button  |        |        |        | M Left Button   |        |                 |        |
  * '--------------------------------------------------------------------------------------------------------------------------------------'
  */
 
   [_FL] = LAYOUT_ortho_5x15(
     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  KC_HOME, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
-    _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  KC_PGUP, XXXXXXX, KC_MS_U, XXXXXXX, KC_WH_U, _______,
+    _______, KC_ACL0, KC_ACL1, KC_ACL2, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  KC_PGUP, XXXXXXX, KC_MS_U, XXXXXXX, KC_WH_U, _______,
     _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  KC_PGDN, KC_MS_L, KC_MS_D, KC_MS_R, KC_WH_D, _______,
-    KC_ACL2, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  KC_END,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_ACL1,
-    KC_ACL0, _______, _______, _______, KC_BTN2, XXXXXXX, _______, _______, _______,  KC_BTN1, XXXXXXX, _______, _______, _______, _______
+    _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  KC_END,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
+    _______, _______, _______, _______, KC_BTN2, XXXXXXX, _______, _______, _______,  KC_BTN1, XXXXXXX, _______, _______, _______, _______
   ),
 
 /* FUNCTION
  * .--------------------------------------------------------------------------------------------------------------------------------------.
- * | F1     | F2     | F3     | F4     | F5     | F6     | NUM LK | P/     | P*     | F7     | F8     | F9     | F10    | F11    | F12    |
+ * |        |        |        |        |        |        | F10    | F11    | F12    |        |        |        |        |        | TD_DEV |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
- * | SELECT | CALC   | MYCOMP | MAIL   | RGB HD | RGB HI | P7     | P8     | P9     | -      |        |        | PR SCR | SCR LK | PAUSE  |
+ * |        |        |        |        |        |        | F7     | F8     | F9     | -      |        |        |        |        | C+A+D  |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
- * | PREV   | PLAY   | NEXT   | STOP   | RGB SD | RGB SI | P4     | P5     | P6     | +      |        | RESET  |        |        |        |
+ * |        |        |        |        |        |        | F4     | F5     | F6     | +      |        |        |        |        |        |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
- * | VOL-   | MUTE   | VOL+   | APP    | RGB VD | RGB VI | P1     | P2     | P3     | PENT   |        |        |        |        |        |
+ * |        |        |        |        |        |        | F1     | F2     | F3     |        |        |        |        |        |        |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
- * |        |        | RGB TG | FN     | RGB RMD| RGB MD | P0     |        | P.     | PENT   | PENT   | FN     |        |        |        |
+ * |        |        |        |        |        |        |        |        |        |        |        | FN     |        |        |        |
  * '--------------------------------------------------------------------------------------------------------------------------------------'
  */
 
   [_FN] = LAYOUT_ortho_5x15(
-    KC_F1,   KC_F2,   KC_F3,   RGB_M_P,   KC_F5,   KC_F6,   KC_NLCK, KC_SLSH, KC_ASTR, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,
-    KC_MSEL, KC_CALC, KC_MYCM, RGB_M_K, RGB_HUD, RGB_HUI, KC_P7,   KC_P8,   KC_P9,   KC_MINS, _______, _______, KC_PSCR, KC_SLCK, KC_PAUS,
-    KC_MPRV, KC_MPLY, KC_MNXT, RGB_M_X, RGB_SAD, RGB_SAI, KC_P4,   KC_P5,   KC_P6,   KC_PLUS, _______, RESET,   _______, _______, _______,
-    KC_VOLD, KC_MUTE, KC_VOLU, RGB_M_R,  RGB_VAD, RGB_VAI, KC_P1,   KC_P2,   KC_P3,   KC_PENT, _______, _______, _______, _______, _______,
-    _______, _______, RGB_TOG, MO(_FN), RGB_RMOD,RGB_MOD, KC_P0,   _______, KC_PDOT, KC_PENT, KC_PENT, MO(_FN), _______, _______, _______
+    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F10,  KC_F11,  KC_F12,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TD(TD_DEV),
+    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F6,   KC_F7,   KC_F8,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_CAD,
+    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F4,   KC_F5,   KC_F6,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F1,   KC_F2,   KC_F3,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MO(_FN), XXXXXXX, XXXXXXX, XXXXXXX
   )
+};
+
+void td_reset(qk_tap_dance_state_t  *state, void *user_data) {
+    if (state->count >= 2) {
+        reset_keyboard();
+    }
+}
+
+qk_tap_dance_action_t tap_dance_actions[] = {
+    [TD_DEV] = ACTION_TAP_DANCE_FN(td_reset),
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -201,7 +218,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 void matrix_init_user(void) {
-
+    DDRF |= (1 << XD75_KEYCAPS_LED);
 }
 
 void matrix_scan_user(void) {

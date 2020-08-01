@@ -18,3 +18,4 @@
 
 // place overrides here
 #define MK_MOMENTARY_ACCEL
+#define TAPPING_TERM 200
