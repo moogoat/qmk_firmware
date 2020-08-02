@@ -21,6 +21,7 @@ enum custom_layers {
     _QW = 0,
     _QE, // Default without the mods
     _LS,
+    _G1,
     _JL,
     _FL,
     _NP,
@@ -39,6 +40,7 @@ enum tap_dance_keycodes {
     TDAR, // ->, =>
     TDNL, // twice for numpad lock
     TDEM, // emails
+    TD2G, // 2gui
 };
 
 // Custom keycode definitions
@@ -55,6 +57,7 @@ enum tap_dance_keycodes {
 #define HSV_QE 170, 255, HSV_DEFAULT_V
 #define HSV_FN 36, 255, 255
 #define HSV_NP 85, 255, HSV_DEFAULT_V
+#define HSV_G1 0, 255, HSV_DEFAULT_V
 
 // Sleep module
 static uint32_t sleep_timer;
@@ -163,7 +166,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /* LSPACE
  * .--------------------------------------------------------------------------------------------------------------------------------------.
- * |        |        |        |        |        |        |        |        |        |        |        |        |        | =      | +      |
+ * |        |        |        |        |        |        |        |        |        |        |        |        |        |        | =      |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+-----------------|
  * |        |        |        | Emails |        |        |        |        |        |        |        |        |        |        | Del    |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+-----------------+--------|
@@ -176,11 +179,33 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 
   [_LS] = LAYOUT_ortho_5x15(
-    _______, _______, _______, _______,  _______, _______, _______, _______, _______, _______, _______, _______, _______,  KC_EQL,  KC_PLUS,
+    _______, _______, _______, _______,  _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______, KC_EQL,
     _______, _______, _______, TD(TDEM), _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______, KC_DEL,
     _______, _______, KC_LABK, KC_LCBR,  KC_LPRN, KC_LBRC, _______, _______, _______, KC_RBRC, KC_RPRN, KC_RCBR, KC_RABK,  _______, _______,
     _______, _______, _______, _______,  _______, _______, _______, _______, _______, _______, _______, _______, TD(TDAR), _______, _______,
     _______, _______, _______, _______,  _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______
+  ),
+
+/* Gaming Layer 1 - default
+ * .--------------------------------------------------------------------------------------------------------------------------------------.
+ * | `      | 1      | 2      | 3      | 4      | 5      | 6      | 7      | 8      | 9      | 0      | 0      | -      | =      | BACKSP |
+ * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+-----------------|
+ * | TAB    | Q      | W      | E      | R      | T      | DM1    | -M4    | Volup  | Y      | U      | I      | O      | P      | \      |
+ * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+-----------------+--------|
+ * | ESC    | A      | S      | D      | F      | G      | DM2    | -M5    | Voldn  | H      | J      | K      | L      | ;      | '      |
+ * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------------------------+--------|
+ * | LSHIFT | Z      | X      | C      | V      | B      | -M3    | UP     | Mute   | N      | M      | ,      | .      | /      | Enter  |
+ * |--------+--------+--------+--------+--------+-----------------+--------+--------+--------+--------+-----------------+--------+--------|
+ * | LCTRL  | 2GUI   | -Turbo | LALT   | SPACE           | LEFT   | DOWN   | RIGHT  | SPACE           | -TurDn | Exit            | -TurUp |
+ * '--------------------------------------------------------------------------------------------------------------------------------------'
+ */
+
+  [_G1] = LAYOUT_ortho_5x15(
+    KC_GRV,  KC_1,     KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC,
+    KC_TAB,  KC_Q,     KC_W,    KC_E,    KC_R,    KC_T,    DM_PLY1, XXXXXXX, KC_VOLU, KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,
+    KC_ESC,  KC_A,     KC_S,    KC_D,    KC_F,    KC_G,    DM_PLY2, XXXXXXX, KC_VOLD, KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
+    KC_LSFT, KC_Z,     KC_X,    KC_C,    KC_V,    KC_B,    XXXXXXX, KC_UP,   KC_MUTE, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_ENT,
+    KC_LCTL, TD(TD2G), XXXXXXX, KC_LALT, KC_SPC,  XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, KC_SPC,  XXXXXXX, XXXXXXX, TG(_G1), XXXXXXX, XXXXXXX
   ),
 
 /* JLAYER
@@ -251,7 +276,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /* FUNCTION
  * .--------------------------------------------------------------------------------------------------------------------------------------.
- * |        |        |        |        |        |        | F10    | F11    | F12    |        |        |        |        |        | TD_DEV |
+ * |        | G1     |        |        |        |        | F10    | F11    | F12    |        |        |        |        |        | TD_DEV |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
  * |        | EZQWER | WPMTog |        |        |        | F7     | F8     | F9     | -      |        |        |        |        | C+A+D  |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
@@ -264,7 +289,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 
   [_FN] = LAYOUT_ortho_5x15(
-    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F10,  KC_F11,  KC_F12,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TD(TD_DEV),
+    XXXXXXX, TG(_G1), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F10,  KC_F11,  KC_F12,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TD(TD_DEV),
     XXXXXXX, TG(_QE), KC_TWPM, XXXXXXX, XXXXXXX, XXXXXXX, KC_F6,   KC_F7,   KC_F8,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_CAD,
     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F4,   KC_F5,   KC_F6,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F1,   KC_F2,   KC_F3,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
@@ -296,7 +321,8 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     [TD_DEV] = ACTION_TAP_DANCE_FN(td_reset),
     [TDAR] = ACTION_TAP_DANCE_FN(td_arrow),
     [TDNL] = ACTION_TAP_DANCE_LAYER_TOGGLE(XXXXXXX, _NP),
-    [TDEM] = ACTION_TAP_DANCE_FN(td_emails)
+    [TDEM] = ACTION_TAP_DANCE_FN(td_emails),
+    [TD2G] = ACTION_TAP_DANCE_DOUBLE(XXXXXXX, KC_LGUI)
 };
 
 // Keyboard overrides
@@ -367,6 +393,10 @@ layer_state_t layer_state_set_user(layer_state_t state) {
         case _QE:
             wpm_layer_disable();
             rgblight_sethsv(HSV_QE);
+            break;
+        case _G1:
+            wpm_layer_disable();
+            rgblight_sethsv(HSV_G1);
             break;
         case _FN:
             wpm_layer_disable();
