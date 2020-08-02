@@ -34,7 +34,9 @@ enum custom_keycodes {
 
 // Tap Dance defintions
 enum tap_dance_keycodes {
-    TD_DEV,
+    TD_DEV, // twice for dev.
+    TDAR, // ->, =>
+    TDNL, // twice for numpad lock
 };
 
 // Custom keycode definitions
@@ -114,7 +116,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------------------------+--------|
  * | LSHIFT | Z      | X      | C      | V      | B      | [      | UP     | ]      | N      | M      | ,      | .      | /      | SH/ENT |
  * |--------+--------+--------+--------+--------+-----------------+--------+--------+--------+--------+-----------------+--------+--------|
- * | LCTRL  | LGUI   | HYPER  | LALT   | LSPACE          | LEFT   | DOWN   | RIGHT  | LSPACE          | -      | FN             | NUMPAD  |
+ * | LCTRL  | LGUI   | HYPER  | LALT   | LSPACE          | LEFT   | DOWN   | RIGHT  | SPACE           | -/MIPL | FN             | NUMPAD  |
  * '--------------------------------------------------------------------------------------------------------------------------------------'
  */
 
@@ -123,7 +125,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_LCBR, KC_VOLD, KC_RCBR, KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,
     KC_ESC,  KC_A,    KC_S,    KC_D,    KC_FLAY, KC_G,    KC_LPRN, KC_MUTE, KC_RPRN, KC_H,    KC_JLAY, KC_K,    KC_L,    KC_SCLN, KC_QUOT,
     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_LBRC, KC_UP,   KC_RBRC, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_SHEN,
-    KC_LCTL, KC_LGUI, KC_HYPR, KC_LALT, KC_LS,   XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, KC_LS,  XXXXXXX, KC_MINS, TT(_FN), XXXXXXX, TG(_NP)
+    KC_LCTL, KC_LGUI, KC_HYPR, KC_LALT, KC_LS,   XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, KC_SPC,  XXXXXXX, KC_MIPL, TT(_FN), XXXXXXX, TD(TDNL)
   ),
 
 /* LSPACE
@@ -134,7 +136,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+-----------------+--------|
  * |        |        | <      | {      | (      | [      |        |        |        | ]      | )      | }      | >      |        |        |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------------------------+--------|
- * |        |        |        |        |        |        |        |        |        |        |        |        |        |        |        |
+ * |        |        |        |        |        |        |        |        |        |        |        |        | Arrow  |        |        |
  * |--------+--------+--------+--------+--------+-----------------+--------+--------+--------+--------+-----------------+--------+--------|
  * |        |        |        |        |                 |        |        |        |                 |        |                 |        |
  * '--------------------------------------------------------------------------------------------------------------------------------------'
@@ -144,7 +146,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______, _______, _______, KC_EQL,  KC_PLUS,
     _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______, _______, _______, _______, KC_DEL,
     _______, _______, KC_LABK, KC_LCBR, KC_LPRN, KC_LBRC, _______, _______, _______,  KC_RBRC, KC_RPRN, KC_RCBR, KC_RABK, _______, _______,
-    _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______, _______, _______, _______, _______,
+    _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______, _______, TD(TDAR), _______, _______,
     _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______, _______, _______, _______, _______
   ),
 
@@ -237,16 +239,26 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   )
 };
 
+// Tap dance functions
 void td_reset(qk_tap_dance_state_t  *state, void *user_data) {
-    if (state->count >= 2) {
+    if (state->count >= 2)
         reset_keyboard();
-    }
+}
+
+void td_arrow(qk_tap_dance_state_t  *state, void *user_data) {
+    if (state->count == 1)
+        SEND_STRING("->");
+    else if (state->count == 2)
+        SEND_STRING("=>");
 }
 
 qk_tap_dance_action_t tap_dance_actions[] = {
     [TD_DEV] = ACTION_TAP_DANCE_FN(td_reset),
+    [TDAR] = ACTION_TAP_DANCE_FN(td_arrow),
+    [TDNL] = ACTION_TAP_DANCE_LAYER_TOGGLE(XXXXXXX, _NP)
 };
 
+// Keyboard overrides
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case KC_TWPM:
@@ -326,6 +338,7 @@ void led_set_user(uint8_t usb_led) {
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case KC_LS:
+        case KC_MIPL:
             return 125;
         default:
             return TAPPING_TERM;
