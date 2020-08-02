@@ -19,6 +19,7 @@
 // Layer shorthand
 enum custom_layers {
     _QW = 0,
+    _QE, // Default without the mods
     _LS,
     _JL,
     _FL,
@@ -37,6 +38,7 @@ enum tap_dance_keycodes {
     TD_DEV, // twice for dev.
     TDAR, // ->, =>
     TDNL, // twice for numpad lock
+    TDEM, // emails
 };
 
 // Custom keycode definitions
@@ -48,9 +50,10 @@ enum tap_dance_keycodes {
 #define KC_MIPL LT(_LS, KC_MINS)
 
 // Custom colours
-#define HSV_DEFAULT_V 168
+#define HSV_DEFAULT_V 140
 #define HSV_QW 128, 255, HSV_DEFAULT_V
-#define HSV_FN 28, 255, 255
+#define HSV_QE 170, 255, HSV_DEFAULT_V
+#define HSV_FN 36, 255, 255
 #define HSV_NP 85, 255, HSV_DEFAULT_V
 
 // Sleep module
@@ -71,8 +74,16 @@ void reset_sleep_status(void) {
 #define WPM_MIN 60
 #define WPM_MAX 120
 #define WPM_EFFECT RGBLIGHT_MODE_KNIGHT
+
 static uint32_t wpm_check_timer;
 static bool wpm_active;
+static bool wpm_layer_disabled;
+
+void wpm_layer_disable(void) {
+    wpm_layer_disabled = true;
+    rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
+}
+
 
 /* BLANK
  * .--------------------------------------------------------------------------------------------------------------------------------------.
@@ -112,11 +123,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+-----------------|
  * | TAB    | Q      | W      | E      | R      | T      | {      | Voldn  | }      | Y      | U      | I      | O      | P      | \      |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+-----------------+--------|
- * | ESC    | A      | S      | D      | F/FL   | G      | (      | Mute   | )      | H      | J      | K      | L      | ;      | '      |
+ * | ESC    | A      | S      | D      | F/FL   | G      | (      | Mute   | )      | H      | J/JL   | K      | L      | ;      | '      |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------------------------+--------|
  * | LSHIFT | Z      | X      | C      | V      | B      | [      | UP     | ]      | N      | M      | ,      | .      | /      | SH/ENT |
  * |--------+--------+--------+--------+--------+-----------------+--------+--------+--------+--------+-----------------+--------+--------|
- * | LCTRL  | LGUI   | HYPER  | LALT   | LSPACE          | LEFT   | DOWN   | RIGHT  | SPACE           | -/MIPL | FN             | NUMPAD  |
+ * | LCTRL  | LGUI   | HYPER  | LALT   | LSPACE          | LEFT   | DOWN   | RIGHT  | SPACE           | -/MIPL | FN              | NUMPAD |
  * '--------------------------------------------------------------------------------------------------------------------------------------'
  */
 
@@ -125,14 +136,36 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_LCBR, KC_VOLD, KC_RCBR, KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,
     KC_ESC,  KC_A,    KC_S,    KC_D,    KC_FLAY, KC_G,    KC_LPRN, KC_MUTE, KC_RPRN, KC_H,    KC_JLAY, KC_K,    KC_L,    KC_SCLN, KC_QUOT,
     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_LBRC, KC_UP,   KC_RBRC, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_SHEN,
-    KC_LCTL, KC_LGUI, KC_HYPR, KC_LALT, KC_LS,   XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, KC_SPC,  XXXXXXX, KC_MIPL, TT(_FN), XXXXXXX, TD(TDNL)
+    KC_LCTL, KC_LGUI, KC_HYPR, KC_LALT, KC_LS,   XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, KC_SPC,  XXXXXXX, KC_MIPL, MO(_FN), XXXXXXX, TD(TDNL)
+  ),
+
+/* EZ Qwerty - no mods
+ * .--------------------------------------------------------------------------------------------------------------------------------------.
+ * | `      | 1      | 2      | 3      | 4      | 5      | 6      | Volup  | 5      | 6      | 7      | 8      | 9      | 0      | BACKSP |
+ * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+-----------------|
+ * | TAB    | Q      | W      | E      | R      | T      | {      | Voldn  | }      | Y      | U      | I      | O      | P      | \      |
+ * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+-----------------+--------|
+ * | ESC    | A      | S      | D      | F      | G      | (      | Mute   | )      | H      | J      | K      | L      | ;      | '      |
+ * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------------------------+--------|
+ * | LSHIFT | Z      | X      | C      | V      | B      | [      | UP     | ]      | N      | M      | ,      | .      | /      | Enter  |
+ * |--------+--------+--------+--------+--------+-----------------+--------+--------+--------+--------+-----------------+--------+--------|
+ * | LCTRL  | LGUI   | HYPER  | LALT   | LSPACE          | LEFT   | DOWN   | RIGHT  | SPACE           | -      | Exit            | NUMPAD |
+ * '--------------------------------------------------------------------------------------------------------------------------------------'
+ */
+
+  [_QE] = LAYOUT_ortho_5x15(
+    KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_VOLU, KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC,
+    KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_LCBR, KC_VOLD, KC_RCBR, KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,
+    KC_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_LPRN, KC_MUTE, KC_RPRN, KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
+    KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_LBRC, KC_UP,   KC_RBRC, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_ENT,
+    KC_LCTL, KC_LGUI, KC_HYPR, KC_LALT, KC_LS,   XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, KC_SPC,  XXXXXXX, KC_MINS, TG(_QE), XXXXXXX, TD(TDNL)
   ),
 
 /* LSPACE
  * .--------------------------------------------------------------------------------------------------------------------------------------.
  * |        |        |        |        |        |        |        |        |        |        |        |        |        | =      | +      |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+-----------------|
- * |        |        |        |        |        |        |        |        |        |        |        |        |        |        | Del    |
+ * |        |        |        | Emails |        |        |        |        |        |        |        |        |        |        | Del    |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+-----------------+--------|
  * |        |        | <      | {      | (      | [      |        |        |        | ]      | )      | }      | >      |        |        |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------------------------+--------|
@@ -143,11 +176,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 
   [_LS] = LAYOUT_ortho_5x15(
-    _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______, _______, _______, KC_EQL,  KC_PLUS,
-    _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______, _______, _______, _______, KC_DEL,
-    _______, _______, KC_LABK, KC_LCBR, KC_LPRN, KC_LBRC, _______, _______, _______,  KC_RBRC, KC_RPRN, KC_RCBR, KC_RABK, _______, _______,
-    _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______, _______, TD(TDAR), _______, _______,
-    _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______, _______, _______, _______, _______
+    _______, _______, _______, _______,  _______, _______, _______, _______, _______, _______, _______, _______, _______,  KC_EQL,  KC_PLUS,
+    _______, _______, _______, TD(TDEM), _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______, KC_DEL,
+    _______, _______, KC_LABK, KC_LCBR,  KC_LPRN, KC_LBRC, _______, _______, _______, KC_RBRC, KC_RPRN, KC_RCBR, KC_RABK,  _______, _______,
+    _______, _______, _______, _______,  _______, _______, _______, _______, _______, _______, _______, _______, TD(TDAR), _______, _______,
+    _______, _______, _______, _______,  _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______
   ),
 
 /* JLAYER
@@ -198,7 +231,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * .--------------------------------------------------------------------------------------------------------------------------------------.
  * |        |        |        |        |        | K-     | NUMLCK | K/     | K*     | K-     |        |        |        |        |        |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+-----------------|
- * |        |        |        |        |        | K+     | K7     | K8     | K9     | K+     |        |        |        |        |        |
+ * |        |        |        |        |        | K+     | K7     | K8     | K9     | K+     |        |        |        |        | Del    |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+-----------------+--------|
  * |        |        |        |        |        | PENT   | K4     | K5     | K6     | PENT   |        |        |        |        |        |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------------------------+--------|
@@ -210,7 +243,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_NP] = LAYOUT_ortho_5x15(
     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_BSPC, KC_PMNS, KC_NLCK, KC_PSLS, KC_PAST,  KC_PMNS, KC_BSPC, XXXXXXX, XXXXXXX, XXXXXXX, _______,
-    _______, XXXXXXX, XXXXXXX, XXXXXXX, KC_DEL,  KC_PPLS, KC_P7,   KC_P8,   KC_P9,    KC_PPLS, KC_DEL,  XXXXXXX, XXXXXXX, XXXXXXX, _______,
+    _______, XXXXXXX, XXXXXXX, XXXXXXX, KC_DEL,  KC_PPLS, KC_P7,   KC_P8,   KC_P9,    KC_PPLS, KC_DEL,  XXXXXXX, XXXXXXX, XXXXXXX, KC_DEL,
     _______, XXXXXXX, XXXXXXX, XXXXXXX, KC_ESC,  KC_PENT, KC_P4,   KC_P5,   KC_P6,    KC_PENT, KC_ESC,  XXXXXXX, XXXXXXX, XXXXXXX, _______,
     _______, XXXXXXX, XXXXXXX, XXXXXXX, KC_PENT, KC_PENT, KC_P1,   KC_P2,   KC_P3,    KC_PENT, KC_PENT, XXXXXXX, XXXXXXX, XXXXXXX, _______,
     _______, _______, _______, _______, KC_P0,   XXXXXXX, KC_PDOT, KC_2ZER, KC_PDOT,  KC_P0,   XXXXXXX, _______, _______, _______, TG(_NP)
@@ -220,22 +253,22 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * .--------------------------------------------------------------------------------------------------------------------------------------.
  * |        |        |        |        |        |        | F10    | F11    | F12    |        |        |        |        |        | TD_DEV |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
- * |        |        | WPMTog |        |        |        | F7     | F8     | F9     | -      |        |        |        |        | C+A+D  |
+ * |        | EZQWER | WPMTog |        |        |        | F7     | F8     | F9     | -      |        |        |        |        | C+A+D  |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
  * |        |        |        |        |        |        | F4     | F5     | F6     | +      |        |        |        |        |        |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
  * |        |        |        |        |        |        | F1     | F2     | F3     |        |        |        |        |        |        |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
- * |        |        |        |        |        |        |        |        |        |        |        | FN     |        |        |        |
+ * |        |        |        |        |        |        |        |        |        |        |        |        | FN     |        |        |
  * '--------------------------------------------------------------------------------------------------------------------------------------'
  */
 
   [_FN] = LAYOUT_ortho_5x15(
     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F10,  KC_F11,  KC_F12,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TD(TD_DEV),
-    XXXXXXX, XXXXXXX, KC_TWPM, XXXXXXX, XXXXXXX, XXXXXXX, KC_F6,   KC_F7,   KC_F8,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_CAD,
+    XXXXXXX, TG(_QE), KC_TWPM, XXXXXXX, XXXXXXX, XXXXXXX, KC_F6,   KC_F7,   KC_F8,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_CAD,
     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F4,   KC_F5,   KC_F6,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F1,   KC_F2,   KC_F3,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TT(_FN), XXXXXXX, XXXXXXX, XXXXXXX
+    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MO(_FN), XXXXXXX, XXXXXXX
   )
 };
 
@@ -252,10 +285,18 @@ void td_arrow(qk_tap_dance_state_t  *state, void *user_data) {
         SEND_STRING("=>");
 }
 
+void td_emails(qk_tap_dance_state_t  *state, void *user_data) {
+    if (state->count == 1)
+        SEND_STRING("jayzhang89@gmail.com");
+    else if (state->count == 2)
+        SEND_STRING("jay2@ualberta.ca");
+}
+
 qk_tap_dance_action_t tap_dance_actions[] = {
     [TD_DEV] = ACTION_TAP_DANCE_FN(td_reset),
     [TDAR] = ACTION_TAP_DANCE_FN(td_arrow),
-    [TDNL] = ACTION_TAP_DANCE_LAYER_TOGGLE(XXXXXXX, _NP)
+    [TDNL] = ACTION_TAP_DANCE_LAYER_TOGGLE(XXXXXXX, _NP),
+    [TDEM] = ACTION_TAP_DANCE_FN(td_emails)
 };
 
 // Keyboard overrides
@@ -288,6 +329,7 @@ void matrix_init_user(void) {
     wpm_check_timer = sleep_timer;
     asleep = false;
     wpm_active = true;
+    wpm_layer_disabled = false;
 }
 
 void matrix_scan_user(void) {
@@ -296,7 +338,7 @@ void matrix_scan_user(void) {
             rgblight_disable();
             asleep = true;
         }
-        if(wpm_active && timer_elapsed32(wpm_check_timer) > WPM_CHECK_INTERVAL) {
+        if(wpm_active && !wpm_layer_disabled && timer_elapsed32(wpm_check_timer) > WPM_CHECK_INTERVAL) {
             uint8_t wpm = get_current_wpm();
             if(wpm > WPM_MIN) {
                 if(wpm < WPM_MAX) {
@@ -319,12 +361,19 @@ void matrix_scan_user(void) {
 layer_state_t layer_state_set_user(layer_state_t state) {
     switch (get_highest_layer(state)) {
         case _QW:
+            wpm_layer_disabled = false;
             rgblight_sethsv(HSV_QW);
             break;
+        case _QE:
+            wpm_layer_disable();
+            rgblight_sethsv(HSV_QE);
+            break;
         case _FN:
+            wpm_layer_disable();
             rgblight_sethsv(HSV_FN);
             break;
         case _NP:
+            wpm_layer_disabled = false;
             rgblight_sethsv(HSV_NP);
             break;
     }
