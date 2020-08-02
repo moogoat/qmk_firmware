@@ -31,7 +31,10 @@ enum custom_layers {
 // Defines the keycodes used by our macros in process_record_user
 enum custom_keycodes {
     KC_2ZER = SAFE_RANGE, // 00
-    KC_TWPM, // toggle WPM module
+    KC_TWPM, // toggle WPM module,
+    KC_TURB, // start turbo module,
+    KC_TURD, // turbo speed down,
+    KC_TURU, // turbo speed up
 };
 
 // Tap Dance defintions
@@ -52,12 +55,14 @@ enum tap_dance_keycodes {
 #define KC_MIPL LT(_LS, KC_MINS)
 
 // Custom colours
-#define HSV_DEFAULT_V 140
+#define HSV_DEFAULT_V 128
 #define HSV_QW 128, 255, HSV_DEFAULT_V
 #define HSV_QE 170, 255, HSV_DEFAULT_V
 #define HSV_FN 36, 255, 255
 #define HSV_NP 85, 255, HSV_DEFAULT_V
 #define HSV_G1 0, 255, HSV_DEFAULT_V
+#define HSV_BLINK_ON 85, 255, 255
+#define HSV_BLINK_OFF 0, 255, 255
 
 // Sleep module
 static uint32_t sleep_timer;
@@ -78,7 +83,7 @@ void reset_sleep_status(void) {
 #define WPM_MAX 120
 #define WPM_EFFECT RGBLIGHT_MODE_KNIGHT
 
-static uint32_t wpm_check_timer;
+static uint16_t wpm_check_timer;
 static bool wpm_active;
 static bool wpm_layer_disabled;
 
@@ -86,6 +91,34 @@ void wpm_layer_disable(void) {
     wpm_layer_disabled = true;
     rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
 }
+
+// RGB blink module
+#define BLINK_DURATION 1000
+static struct BlinkInfo {
+    uint8_t h;
+    uint8_t s;
+    uint8_t v;
+    uint8_t amount;
+    uint8_t oh;
+    uint8_t os;
+    uint8_t ov;
+} blink_info;
+static uint16_t blink_timer;
+
+void blink_led(uint8_t h, uint8_t s, uint8_t v, uint8_t amount) {
+    if (blink_info.amount == 0) {
+        blink_info.oh = rgblight_get_hue();
+        blink_info.os = rgblight_get_sat();
+        blink_info.ov = rgblight_get_val();
+    }
+    blink_info.h = h;
+    blink_info.s = s;
+    blink_info.v = v;
+    blink_info.amount = amount;
+}
+
+// Turbo module
+
 
 
 /* BLANK
@@ -299,8 +332,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 // Tap dance functions
 void td_reset(qk_tap_dance_state_t  *state, void *user_data) {
-    if (state->count >= 2)
+    if (state->count >= 2) {
         reset_keyboard();
+    }
 }
 
 void td_arrow(qk_tap_dance_state_t  *state, void *user_data) {
@@ -333,8 +367,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             if(wpm_active) {
                 wpm_active = false;
                 rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
+                blink_led(HSV_BLINK_OFF, 6);
             } else {
                 wpm_active = true;
+                blink_led(HSV_BLINK_ON, 6);
             }
         }
         break;
@@ -352,10 +388,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 void matrix_init_user(void) {
     sleep_timer = timer_read32();
-    wpm_check_timer = sleep_timer;
+    wpm_check_timer = timer_read();
+    blink_timer = wpm_check_timer;
     asleep = false;
     wpm_active = true;
     wpm_layer_disabled = false;
+    blink_info = (struct BlinkInfo){ 0, 0, 0, 0, 0, 0, 0 };
 }
 
 void matrix_scan_user(void) {
@@ -364,7 +402,7 @@ void matrix_scan_user(void) {
             rgblight_disable();
             asleep = true;
         }
-        if(wpm_active && !wpm_layer_disabled && timer_elapsed32(wpm_check_timer) > WPM_CHECK_INTERVAL) {
+        if(wpm_active && !wpm_layer_disabled && timer_elapsed(wpm_check_timer) > WPM_CHECK_INTERVAL) {
             uint8_t wpm = get_current_wpm();
             if(wpm > WPM_MIN) {
                 if(wpm < WPM_MAX) {
@@ -379,7 +417,19 @@ void matrix_scan_user(void) {
                     }
                 }
             }
-            wpm_check_timer = timer_read32();
+            wpm_check_timer = timer_read();
+        }
+        if(blink_info.amount > 0) {
+            if(blink_info.v > 0) {
+                wpm_layer_disable();
+                rgblight_sethsv_range(blink_info.h, blink_info.s, blink_info.v, 0, blink_info.amount);
+                blink_timer = timer_read();
+                blink_info.v = 0;
+            } else if(timer_elapsed(blink_timer) > BLINK_DURATION) {
+                wpm_layer_disabled = false;
+                blink_info.amount = 0;
+                rgblight_sethsv_noeeprom(blink_info.oh, blink_info.os, blink_info.ov);
+            }
         }
     }
 }
