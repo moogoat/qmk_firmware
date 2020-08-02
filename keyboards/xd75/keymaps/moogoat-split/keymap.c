@@ -33,8 +33,8 @@ enum custom_keycodes {
     KC_2ZER = SAFE_RANGE, // 00
     KC_TWPM, // toggle WPM module,
     KC_TURB, // start turbo module,
-    KC_TURD, // turbo speed down,
-    KC_TURU, // turbo speed up
+    KC_TURS, // turbo speed toggle,
+    KC_TURT, // turbo toggle
 };
 
 // Tap Dance defintions
@@ -63,6 +63,7 @@ enum tap_dance_keycodes {
 #define HSV_G1 0, 255, HSV_DEFAULT_V
 #define HSV_BLINK_ON 85, 255, 255
 #define HSV_BLINK_OFF 0, 255, 255
+#define HSV_BLINK_YELLOW 43, 255, 255
 
 // Sleep module
 static uint32_t sleep_timer = 0;
@@ -102,7 +103,7 @@ static struct BlinkInfo {
     uint8_t oh;
     uint8_t os;
     uint8_t ov;
-} blink_info;
+} blink_info = (struct BlinkInfo){ 0, 0, 0, 0, 0, 0, 0 };
 static uint16_t blink_timer = 0;
 
 void blink_led(uint8_t h, uint8_t s, uint8_t v, uint8_t amount) {
@@ -118,7 +119,15 @@ void blink_led(uint8_t h, uint8_t s, uint8_t v, uint8_t amount) {
 }
 
 // Turbo module
-//uint16_t turbo_codes[4] = {0, 0, 0, 0};
+uint16_t turbo_codes[4] = {0, 0, 0, 0};
+uint16_t turbo_levels[5] = {100, 250, 500, 1000, 2000}; // note: use level-1 as level 0 is constant.
+uint16_t turbo_timer = 0;
+static struct TurboInfo {
+    unsigned int recording : 1;
+    unsigned int on : 1;
+    unsigned int level : 4;
+    unsigned int active : 4;
+} turbo_info = (struct TurboInfo) { 0, 0, 0, 0 };
 
 
 
@@ -239,7 +248,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,  KC_Q,     KC_W,    KC_E,    KC_R,    KC_T,    DM_PLY1, XXXXXXX, KC_VOLU, KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,
     KC_ESC,  KC_A,     KC_S,    KC_D,    KC_F,    KC_G,    DM_PLY2, XXXXXXX, KC_VOLD, KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
     KC_LSFT, KC_Z,     KC_X,    KC_C,    KC_V,    KC_B,    XXXXXXX, KC_UP,   KC_MUTE, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_ENT,
-    KC_LCTL, TD(TD2G), XXXXXXX, KC_LALT, KC_SPC,  XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, KC_SPC,  XXXXXXX, XXXXXXX, TG(_G1), XXXXXXX, XXXXXXX
+    KC_LCTL, TD(TD2G), KC_TURB, KC_LALT, KC_SPC,  XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, KC_SPC,  XXXXXXX, KC_TURS, TG(_G1), XXXXXXX, KC_TURT
   ),
 
 /* JLAYER
@@ -374,21 +383,74 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 blink_led(HSV_BLINK_ON, 6);
             }
         }
-        break;
+        return false;
     case KC_2ZER:
         if (record->event.pressed) {
             SEND_STRING("00");
         }
-        break;
+        return false;
+    case KC_TURB:
+        if(record->event.pressed) {
+            turbo_info.active = 0;
+            turbo_info.recording = 1;
+            turbo_info.on = 0;
+        } else {
+            turbo_info.recording = 0;
+            blink_led(HSV_BLINK_ON, turbo_info.active);
+        }
+        return false;
+    case KC_TURT:
+        if(record->event.pressed) {
+            if(turbo_info.on == 0 && turbo_info.active > 0) {
+                turbo_info.on = 1;
+                blink_led(HSV_BLINK_ON, turbo_info.level+1);
+                if(turbo_info.level == 0) {
+                    for(unsigned int i =0; i<turbo_info.active; ++i)
+                        register_code(turbo_codes[i]);
+                }
+            } else {
+                turbo_info.on = 0;
+                blink_led(HSV_BLINK_OFF, 6);
+                if(turbo_info.level == 0) {
+                    for(unsigned int i =0; i<turbo_info.active; ++i)
+                        unregister_code(turbo_codes[i]);
+                }
+            }
+        }
+        return false;
+    case KC_TURS:
+        if(record->event.pressed) {
+            if(turbo_info.level == 5) {
+                turbo_info.level = 0;
+                for(unsigned int i =0; i<turbo_info.active; ++i)
+                    register_code(turbo_codes[i]);
+            } else if(turbo_info.level == 0) {
+                ++turbo_info.level;
+                    for(unsigned int i =0; i<turbo_info.active; ++i)
+                        unregister_code(turbo_codes[i]);
+            } else {
+                turbo_info.level++;
+            }
+            blink_led(HSV_BLINK_YELLOW, turbo_info.level+1);
+        }
+        return false;
     default:
         reset_sleep_status();
-        break;
+        if(record->event.pressed && turbo_info.recording == 1) {
+            if(turbo_info.active < 4) {
+                turbo_codes[turbo_info.active] = keycode;
+                ++turbo_info.active;
+                blink_led(HSV_BLINK_YELLOW, turbo_info.active);
+            } else {
+                blink_led(HSV_BLINK_OFF, 6);
+            }
+            return false;
+        }
+        return true;
   }
-  return true;
 }
 
 void matrix_init_user(void) {
-    blink_info = (struct BlinkInfo){ 0, 0, 0, 0, 0, 0, 0 };
 }
 
 void matrix_scan_user(void) {
@@ -427,6 +489,15 @@ void matrix_scan_user(void) {
                 blink_info.amount = 0;
                 rgblight_sethsv_noeeprom(blink_info.oh, blink_info.os, blink_info.ov);
             }
+        }
+    }
+    if(turbo_info.on == 1 && turbo_info.level > 0) {
+        if(timer_elapsed(turbo_timer) > turbo_levels[turbo_info.level-1]) {
+            for(unsigned int i =0; i<turbo_info.active; ++i) {
+                tap_code(turbo_codes[i]);
+                wait_ms(50);
+            }
+            turbo_timer = timer_read();
         }
     }
 }
