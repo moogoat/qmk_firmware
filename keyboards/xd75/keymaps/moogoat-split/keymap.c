@@ -93,7 +93,7 @@ void wpm_layer_disable(void) {
 }
 
 // RGB blink module
-#define BLINK_DURATION 1000
+#define BLINK_DURATION 500
 static struct BlinkInfo {
     uint8_t h;
     uint8_t s;
@@ -491,4 +491,15 @@ bool get_ignore_mod_tap_interrupt(uint16_t keycode, keyrecord_t *record) {
             return true;
         default: return false;
     }
+}
+
+void dynamic_macro_record_start_user(void) {
+    blink_led(HSV_BLINK_ON, 6);
+}
+
+void dynamic_macro_record_end_user(int8_t direction) {
+    if(direction > 0)
+        blink_led(HSV_BLINK_OFF, 3);
+    else
+        blink_led(HSV_BLINK_OFF, 6);
 }
