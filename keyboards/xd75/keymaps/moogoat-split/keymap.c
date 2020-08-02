@@ -51,7 +51,7 @@ static uint32_t sleep_timer;
 static bool is_asleep;
 static uint32_t wpm_check_timer;
 
-#define SLEEP_TIMEOUT 120000
+#define SLEEP_TIMEOUT 60000
 
 // Helpers
 void reset_sleep_status(void) {
