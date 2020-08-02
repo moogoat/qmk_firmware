@@ -46,21 +46,32 @@ enum tap_dance_keycodes {
 #define KC_CAD C(A(KC_DEL))
 #define KC_MIPL LT(_LS, KC_MINS)
 
-// Other things
+// Custom colours
+#define HSV_DEFAULT_V 168
+#define HSV_QW 128, 255, HSV_DEFAULT_V
+#define HSV_FN 28, 255, 255
+#define HSV_NP 85, 255, HSV_DEFAULT_V
+
+// Sleep module
 static uint32_t sleep_timer;
-static bool is_asleep;
-static uint32_t wpm_check_timer;
+static bool asleep;
 
-#define SLEEP_TIMEOUT 60000
-
-// Helpers
 void reset_sleep_status(void) {
-    if(is_asleep) {
+    if(asleep) {
         rgblight_enable();
-        is_asleep = false;
+        asleep = false;
     }
     sleep_timer = timer_read32();
 }
+
+// Wpm module
+#define SLEEP_TIMEOUT 60000
+#define WPM_CHECK_INTERVAL 1000
+#define WPM_MIN 60
+#define WPM_MAX 120
+#define WPM_EFFECT RGBLIGHT_MODE_KNIGHT
+static uint32_t wpm_check_timer;
+static bool wpm_active;
 
 /* BLANK
  * .--------------------------------------------------------------------------------------------------------------------------------------.
@@ -270,14 +281,32 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 void matrix_init_user(void) {
     sleep_timer = timer_read32();
     wpm_check_timer = sleep_timer;
-    is_asleep = false;
+    asleep = false;
+    wpm_active = true;
+    rgblight_sethsv(HSV_QW);
 }
 
 void matrix_scan_user(void) {
-    if(!is_asleep) {
+    if(!asleep) {
         if(timer_elapsed32(sleep_timer) > SLEEP_TIMEOUT) {
             rgblight_disable();
-            is_asleep = true;
+            asleep = true;
+        }
+        if(timer_elapsed32(wpm_check_timer) > WPM_CHECK_INTERVAL) {
+            uint8_t wpm = get_current_wpm();
+            if(wpm_active && wpm > WPM_MIN) {
+                if(wpm < WPM_MAX) {
+                    if(rgblight_get_mode() != RGBLIGHT_MODE_STATIC_LIGHT)
+                        rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
+                    uint8_t brightness = HSV_DEFAULT_V+(((255-HSV_DEFAULT_V)*(wpm-WPM_MIN))/(WPM_MAX-WPM_MIN));
+                    rgblight_sethsv_noeeprom(rgblight_get_hue(), rgblight_get_sat(), brightness);
+                } else {
+                    if(rgblight_get_mode() != WPM_EFFECT) {
+                        rgblight_mode_noeeprom(WPM_EFFECT);
+                        rgblight_sethsv_noeeprom(rgblight_get_hue(), rgblight_get_sat(), 255);
+                    }
+                }
+            }
         }
     }
 }
@@ -285,19 +314,14 @@ void matrix_scan_user(void) {
 layer_state_t layer_state_set_user(layer_state_t state) {
     switch (get_highest_layer(state)) {
         case _QW:
-            rgblight_sethsv(HSV_CYAN);
-            rgblight_mode(RGBLIGHT_MODE_RAINBOW_MOOD);
-            eeprom_update_byte(EECONFIG_VELOCIKEY, 1);
+            rgblight_sethsv(HSV_QW);
+            wpm_active = true;
             break;
         case _FN:
-            rgblight_mode(RGBLIGHT_MODE_STATIC_LIGHT);
-            eeprom_update_byte(EECONFIG_VELOCIKEY, 0);
-            rgblight_sethsv(HSV_RED);
+            rgblight_sethsv(HSV_FN);
             break;
         case _NP:
-            rgblight_mode(RGBLIGHT_MODE_STATIC_LIGHT);
-            eeprom_update_byte(EECONFIG_VELOCIKEY, 0);
-            rgblight_sethsv(HSV_GREEN);
+            rgblight_sethsv(HSV_NP);
             break;
     }
     return state;
