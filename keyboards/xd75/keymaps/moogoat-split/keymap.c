@@ -55,7 +55,7 @@ enum tap_dance_keycodes {
 #define KC_MIPL LT(_LS, KC_MINS)
 
 // Custom colours
-#define HSV_DEFAULT_V 128
+#define HSV_DEFAULT_V 140
 #define HSV_QW 128, 255, HSV_DEFAULT_V
 #define HSV_QE 170, 255, HSV_DEFAULT_V
 #define HSV_FN 36, 255, 255
@@ -423,6 +423,8 @@ void matrix_scan_user(void) {
             if(blink_info.v > 0) {
                 wpm_layer_disable();
                 rgblight_sethsv_range(blink_info.h, blink_info.s, blink_info.v, 0, blink_info.amount);
+                if(blink_info.amount < 6)
+                    rgblight_sethsv_range(0, 0, 0, blink_info.amount, 6);
                 blink_timer = timer_read();
                 blink_info.v = 0;
             } else if(timer_elapsed(blink_timer) > BLINK_DURATION) {
