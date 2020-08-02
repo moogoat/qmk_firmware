@@ -28,9 +28,8 @@ enum custom_layers {
 
 // Defines the keycodes used by our macros in process_record_user
 enum custom_keycodes {
-  QMKBEST = SAFE_RANGE,
-  QMKURL,
-  KC_2ZER,
+    KC_2ZER = SAFE_RANGE, // 00
+    KC_TWPM, // toggle WPM module
 };
 
 // Tap Dance defintions
@@ -219,7 +218,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * .--------------------------------------------------------------------------------------------------------------------------------------.
  * |        |        |        |        |        |        | F10    | F11    | F12    |        |        |        |        |        | TD_DEV |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
- * |        |        |        |        |        |        | F7     | F8     | F9     | -      |        |        |        |        | C+A+D  |
+ * |        |        | WPMTog |        |        |        | F7     | F8     | F9     | -      |        |        |        |        | C+A+D  |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
  * |        |        |        |        |        |        | F4     | F5     | F6     | +      |        |        |        |        |        |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
@@ -231,7 +230,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_FN] = LAYOUT_ortho_5x15(
     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F10,  KC_F11,  KC_F12,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TD(TD_DEV),
-    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F6,   KC_F7,   KC_F8,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_CAD,
+    XXXXXXX, XXXXXXX, KC_TWPM, XXXXXXX, XXXXXXX, XXXXXXX, KC_F6,   KC_F7,   KC_F8,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_CAD,
     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F4,   KC_F5,   KC_F6,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F1,   KC_F2,   KC_F3,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TT(_FN), XXXXXXX, XXXXXXX, XXXXXXX
@@ -250,30 +249,24 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
-    case QMKBEST:
-      if (record->event.pressed) {
-        // when keycode QMKBEST is pressed
-        SEND_STRING("QMK is the best thing ever!");
-      } else {
-        // when keycode QMKBEST is released
-      }
-      break;
-    case QMKURL:
-      if (record->event.pressed) {
-        // when keycode QMKURL is pressed
-        SEND_STRING("https://qmk.fm/" SS_TAP(X_ENTER));
-      } else {
-        // when keycode QMKURL is released
-      }
-      break;
+    case KC_TWPM:
+        if (record->event.pressed) {
+            if(wpm_active) {
+                wpm_active = false;
+                rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
+            } else {
+                wpm_active = true;
+            }
+        }
+        break;
     case KC_2ZER:
-      if (record->event.pressed) {
-          SEND_STRING("00");
-      }
-      break;
+        if (record->event.pressed) {
+            SEND_STRING("00");
+        }
+        break;
     default:
-      reset_sleep_status();
-      break;
+        reset_sleep_status();
+        break;
   }
   return true;
 }
@@ -283,7 +276,6 @@ void matrix_init_user(void) {
     wpm_check_timer = sleep_timer;
     asleep = false;
     wpm_active = true;
-    rgblight_sethsv(HSV_QW);
 }
 
 void matrix_scan_user(void) {
@@ -292,9 +284,9 @@ void matrix_scan_user(void) {
             rgblight_disable();
             asleep = true;
         }
-        if(timer_elapsed32(wpm_check_timer) > WPM_CHECK_INTERVAL) {
+        if(wpm_active && timer_elapsed32(wpm_check_timer) > WPM_CHECK_INTERVAL) {
             uint8_t wpm = get_current_wpm();
-            if(wpm_active && wpm > WPM_MIN) {
+            if(wpm > WPM_MIN) {
                 if(wpm < WPM_MAX) {
                     if(rgblight_get_mode() != RGBLIGHT_MODE_STATIC_LIGHT)
                         rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
@@ -307,6 +299,7 @@ void matrix_scan_user(void) {
                     }
                 }
             }
+            wpm_check_timer = timer_read32();
         }
     }
 }
@@ -315,7 +308,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     switch (get_highest_layer(state)) {
         case _QW:
             rgblight_sethsv(HSV_QW);
-            wpm_active = true;
             break;
         case _FN:
             rgblight_sethsv(HSV_FN);
