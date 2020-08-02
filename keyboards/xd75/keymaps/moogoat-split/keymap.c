@@ -65,8 +65,8 @@ enum tap_dance_keycodes {
 #define HSV_BLINK_OFF 0, 255, 255
 
 // Sleep module
-static uint32_t sleep_timer;
-static bool asleep;
+static uint32_t sleep_timer = 0;
+static bool asleep = false;
 
 void reset_sleep_status(void) {
     if(asleep) {
@@ -83,9 +83,9 @@ void reset_sleep_status(void) {
 #define WPM_MAX 120
 #define WPM_EFFECT RGBLIGHT_MODE_KNIGHT
 
-static uint16_t wpm_check_timer;
-static bool wpm_active;
-static bool wpm_layer_disabled;
+static uint16_t wpm_check_timer = 0;
+static bool wpm_active = true;
+static bool wpm_layer_disabled = false;
 
 void wpm_layer_disable(void) {
     wpm_layer_disabled = true;
@@ -103,7 +103,7 @@ static struct BlinkInfo {
     uint8_t os;
     uint8_t ov;
 } blink_info;
-static uint16_t blink_timer;
+static uint16_t blink_timer = 0;
 
 void blink_led(uint8_t h, uint8_t s, uint8_t v, uint8_t amount) {
     if (blink_info.amount == 0) {
@@ -118,6 +118,7 @@ void blink_led(uint8_t h, uint8_t s, uint8_t v, uint8_t amount) {
 }
 
 // Turbo module
+//uint16_t turbo_codes[4] = {0, 0, 0, 0};
 
 
 
@@ -387,12 +388,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 void matrix_init_user(void) {
-    sleep_timer = timer_read32();
-    wpm_check_timer = timer_read();
-    blink_timer = wpm_check_timer;
-    asleep = false;
-    wpm_active = true;
-    wpm_layer_disabled = false;
     blink_info = (struct BlinkInfo){ 0, 0, 0, 0, 0, 0, 0 };
 }
 
