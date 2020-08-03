@@ -19,6 +19,8 @@
 // Layer shorthand
 enum custom_layers {
     _QW = 0,
+    _Q2, // Experimental default
+    _Q3, // Exerpimental default 2
     _QE, // Default without the mods
     _LS,
     _G1,
@@ -35,6 +37,7 @@ enum custom_keycodes {
     KC_TURB, // start turbo module,
     KC_TURS, // turbo speed toggle,
     KC_TURT, // turbo toggle
+    KC_Q2TG, KC_Q3TG, KC_QWTG // Enable experimental layers.
 };
 
 // Tap Dance defintions
@@ -174,11 +177,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /* QWERTY
  * .--------------------------------------------------------------------------------------------------------------------------------------.
- * | `      | 1      | 2      | 3      | 4      | 5      | 6      | Volup  | 5      | 6      | 7      | 8      | 9      | 0      | BACKSP |
+ * | `      | 1      | 2      | 3      | 4      | 5      | 6      | Volup  | -      | 7      | 8      | 9      | 0      | =      | BACKSP |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+-----------------|
- * | TAB    | Q      | W      | E      | R      | T      | {      | Voldn  | }      | Y      | U      | I      | O      | P      | \      |
+ * | TAB    | Q      | W      | E      | R      | T      | {      | Del    | }      | Y      | U      | I      | O      | P      | \      | * trying out a new bkspc
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+-----------------+--------|
- * | ESC    | A      | S      | D      | F/FL   | G      | (      | Mute   | )      | H      | J/JL   | K      | L      | ;      | '      |
+ * | ESC    | A      | S      | D      | F/FL   | G      | (      | Voldn  | )      | H      | J/JL   | K      | L      | ;      | '      |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------------------------+--------|
  * | LSHIFT | Z      | X      | C      | V      | B      | [      | UP     | ]      | N      | M      | ,      | .      | /      | SH/ENT |
  * |--------+--------+--------+--------+--------+-----------------+--------+--------+--------+--------+-----------------+--------+--------|
@@ -187,20 +190,36 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 
   [_QW] = LAYOUT_ortho_5x15(
-    KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_VOLU, KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC,
-    KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_LCBR, KC_VOLD, KC_RCBR, KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,
-    KC_ESC,  KC_A,    KC_S,    KC_D,    KC_FLAY, KC_G,    KC_LPRN, KC_MUTE, KC_RPRN, KC_H,    KC_JLAY, KC_K,    KC_L,    KC_SCLN, KC_QUOT,
+    KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_VOLU, KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_EQL,  KC_BSPC,
+    KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_LCBR, KC_DEL,  KC_RCBR, KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,
+    KC_ESC,  KC_A,    KC_S,    KC_D,    KC_FLAY, KC_G,    KC_LPRN, KC_VOLD, KC_RPRN, KC_H,    KC_JLAY, KC_K,    KC_L,    KC_SCLN, KC_QUOT,
+    KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_LBRC, KC_UP,   KC_RBRC, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_SHEN,
+    KC_LCTL, KC_LGUI, KC_MHYP, KC_LALT, KC_LS,   XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, KC_SPC,  XXXXXXX, KC_MIPL, MO(_FN), XXXXXXX, TD(TDNL)
+  ),
+
+  [_Q2] = LAYOUT_ortho_5x15(
+    KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_VOLU, KC_MINS, KC_7,    KC_8,    KC_9,    KC_0,    KC_EQL,  KC_BSLS,
+    KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_LCBR, KC_DEL,  KC_RCBR, KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
+    KC_ESC,  KC_A,    KC_S,    KC_D,    KC_FLAY, KC_G,    KC_LPRN, KC_VOLD, KC_RPRN, KC_H,    KC_JLAY, KC_K,    KC_L,    KC_SCLN, KC_QUOT,
+    KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_LBRC, KC_UP,   KC_RBRC, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_SHEN,
+    KC_LCTL, KC_LGUI, KC_MHYP, KC_LALT, KC_LS,   XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, KC_SPC,  XXXXXXX, KC_MIPL, MO(_FN), XXXXXXX, TD(TDNL)
+  ),
+
+  [_Q3] = LAYOUT_ortho_5x15(
+    KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_VOLU, KC_MINS, KC_EQL,  KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC,
+    KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_LCBR, KC_DEL,  KC_RCBR, KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
+    KC_ESC,  KC_A,    KC_S,    KC_D,    KC_FLAY, KC_G,    KC_LPRN, KC_VOLD, KC_RPRN, KC_H,    KC_JLAY, KC_K,    KC_L,    KC_SCLN, KC_QUOT,
     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_LBRC, KC_UP,   KC_RBRC, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_SHEN,
     KC_LCTL, KC_LGUI, KC_MHYP, KC_LALT, KC_LS,   XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, KC_SPC,  XXXXXXX, KC_MIPL, MO(_FN), XXXXXXX, TD(TDNL)
   ),
 
 /* EZ Qwerty - no mods
  * .--------------------------------------------------------------------------------------------------------------------------------------.
- * | `      | 1      | 2      | 3      | 4      | 5      | 6      | Volup  | 5      | 6      | 7      | 8      | 9      | 0      | BACKSP |
+ * | `      | 1      | 2      | 3      | 4      | 5      | 6      | Volup  | -      | 7      | 8      | 9      | 0      | =      | BACKSP |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+-----------------|
- * | TAB    | Q      | W      | E      | R      | T      | {      | Voldn  | }      | Y      | U      | I      | O      | P      | \      |
+ * | TAB    | Q      | W      | E      | R      | T      | {      | Del    | }      | Y      | U      | I      | O      | P      | \      |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+-----------------+--------|
- * | ESC    | A      | S      | D      | F      | G      | (      | Mute   | )      | H      | J      | K      | L      | ;      | '      |
+ * | ESC    | A      | S      | D      | F      | G      | (      | Voldn  | )      | H      | J      | K      | L      | ;      | '      |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------------------------+--------|
  * | LSHIFT | Z      | X      | C      | V      | B      | [      | UP     | ]      | N      | M      | ,      | .      | /      | Enter  |
  * |--------+--------+--------+--------+--------+-----------------+--------+--------+--------+--------+-----------------+--------+--------|
@@ -209,20 +228,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 
   [_QE] = LAYOUT_ortho_5x15(
-    KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_VOLU, KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC,
-    KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_LCBR, KC_VOLD, KC_RCBR, KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,
-    KC_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_LPRN, KC_MUTE, KC_RPRN, KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
+    KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_VOLU, KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_EQL,  KC_BSPC,
+    KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_LCBR, KC_DEL,  KC_RCBR, KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,
+    KC_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_LPRN, KC_VOLD, KC_RPRN, KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_LBRC, KC_UP,   KC_RBRC, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_ENT,
     KC_LCTL, KC_LGUI, KC_HYPR, KC_LALT, KC_LS,   XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, KC_SPC,  XXXXXXX, KC_MINS, TG(_QE), XXXXXXX, TD(TDNL)
   ),
 
 /* LSPACE
  * .--------------------------------------------------------------------------------------------------------------------------------------.
- * |        |        |        |        |        |        |        |        |        |        |        |        |        | Arrow  | +      |
+ * |        |        |        |        |        |        |        | Mute   |        |        |        |        |        | Arrow  | +      |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+-----------------|
  * |        |        |        | Emails |        |        |        |        |        |        |        |        |        |        | =      |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+-----------------+--------|
- * |        |        | <      | {      | (      | [      |        |        |        | ]      | )      | }      | >      |        |        |
+ * |        |        | <      | {      | (      | [      |        | Mute   |        | ]      | )      | }      | >      |        |        |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------------------------+--------|
  * |        |        |        |        |        |        |        |        |        |        |        | DM1    | DM2    | TurTog | TurSpd |
  * |--------+--------+--------+--------+--------+-----------------+--------+--------+--------+--------+-----------------+--------+--------|
@@ -231,9 +250,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 
   [_LS] = LAYOUT_ortho_5x15(
-    _______, _______, _______, _______,  _______, _______, _______, _______, _______, _______, _______, _______, _______, TD(TDAR), KC_PLUS,
+    _______, _______, _______, _______,  _______, _______, _______, KC_MUTE, _______, _______, _______, _______, _______, TD(TDAR), KC_PLUS,
     _______, _______, _______, TD(TDEM), _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,  KC_EQL,
-    _______, _______, KC_LABK, KC_LCBR,  KC_LPRN, KC_LBRC, _______, _______, _______, KC_RBRC, KC_RPRN, KC_RCBR, KC_RABK, _______,  _______,
+    _______, _______, KC_LABK, KC_LCBR,  KC_LPRN, KC_LBRC, _______, KC_MUTE, _______, KC_RBRC, KC_RPRN, KC_RCBR, KC_RABK, _______,  _______,
     _______, _______, _______, _______,  _______, _______, _______, _______, _______, _______, _______, DM_PLY1, DM_PLY2, KC_TURT,  KC_TURS,
     _______, _______, _______, _______,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______
   ),
@@ -328,7 +347,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /* FUNCTION
  * .--------------------------------------------------------------------------------------------------------------------------------------.
- * |        | G1     |        |        |        |        | F10    | F11    | F12    |        |        | Pause  | ScrlLk | PrntSn | TD_DEV |
+ * |        | G1     | Q2     | Q3     | QW     |        | F10    | F11    | F12    |        |        | Pause  | ScrlLk | PrntSn | TD_DEV |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
  * |        | EZQWER | WPMTog |        |        |        | F7     | F8     | F9     | -      |        | Ins    | Home   | PgUp   | C+A+D  |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
@@ -341,7 +360,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 
   [_FN] = LAYOUT_ortho_5x15(
-    XXXXXXX, TG(_G1), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F10,  KC_F11,  KC_F12,  XXXXXXX, XXXXXXX, KC_PAUS, KC_SLCK, KC_PSCR, TD(TD_DEV),
+    XXXXXXX, TG(_G1), KC_Q2TG, KC_Q3TG, KC_QWTG, XXXXXXX, KC_F10,  KC_F11,  KC_F12,  XXXXXXX, XXXXXXX, KC_PAUS, KC_SLCK, KC_PSCR, TD(TD_DEV),
     XXXXXXX, TG(_QE), KC_TWPM, XXXXXXX, XXXXXXX, XXXXXXX, KC_F6,   KC_F7,   KC_F8,   XXXXXXX, XXXXXXX, KC_INS,  KC_HOME, KC_PGUP, KC_CAD,
     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F4,   KC_F5,   KC_F6,   XXXXXXX, XXXXXXX, KC_DEL,  KC_END,  KC_PGDN, XXXXXXX,
     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F1,   KC_F2,   KC_F3,   XXXXXXX, XXXXXXX, DM_REC1, DM_REC2, KC_TURB, KC_TURS,
@@ -396,6 +415,24 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case KC_2ZER:
         if (record->event.pressed) {
             SEND_STRING("00");
+        }
+        return false;
+    case KC_Q2TG:
+        if (record->event.pressed) {
+            set_single_persistent_default_layer(_Q2);
+            blink_led(234, 128, 255, 6);
+        }
+        return false;
+    case KC_Q3TG:
+        if (record->event.pressed) {
+            set_single_persistent_default_layer(_Q3);
+            blink_led(191, 255, 255, 6);
+        }
+        return false;
+    case KC_QWTG:
+        if (record->event.pressed) {
+            set_single_persistent_default_layer(_QW);
+            blink_led(129, 255, 255, 6);
         }
         return false;
     case KC_TURB:
@@ -515,6 +552,8 @@ void matrix_scan_user(void) {
 layer_state_t layer_state_set_user(layer_state_t state) {
     switch (get_highest_layer(state)) {
         case _QW:
+        case _Q2:
+        case _Q3:
             wpm_layer_disabled = false;
             rgblight_sethsv(HSV_QW);
             break;
