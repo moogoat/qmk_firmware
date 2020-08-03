@@ -53,6 +53,7 @@ enum tap_dance_keycodes {
 #define KC_JLAY LT(_JL, KC_J)
 #define KC_CAD C(A(KC_DEL))
 #define KC_MIPL LT(_LS, KC_MINS)
+#define KC_MHYP C(S(A(KC_NO)))
 
 // Custom colours
 #define HSV_DEFAULT_V 140
@@ -94,7 +95,7 @@ void wpm_layer_disable(void) {
 }
 
 // RGB blink module
-#define BLINK_DURATION 500
+#define BLINK_DURATION 750
 static struct BlinkInfo {
     uint8_t h;
     uint8_t s;
@@ -190,7 +191,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_LCBR, KC_VOLD, KC_RCBR, KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,
     KC_ESC,  KC_A,    KC_S,    KC_D,    KC_FLAY, KC_G,    KC_LPRN, KC_MUTE, KC_RPRN, KC_H,    KC_JLAY, KC_K,    KC_L,    KC_SCLN, KC_QUOT,
     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_LBRC, KC_UP,   KC_RBRC, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_SHEN,
-    KC_LCTL, KC_LGUI, KC_HYPR, KC_LALT, KC_LS,   XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, KC_SPC,  XXXXXXX, KC_MIPL, MO(_FN), XXXXXXX, TD(TDNL)
+    KC_LCTL, KC_LGUI, KC_MHYP, KC_LALT, KC_LS,   XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, KC_SPC,  XXXXXXX, KC_MIPL, MO(_FN), XXXXXXX, TD(TDNL)
   ),
 
 /* EZ Qwerty - no mods
@@ -223,7 +224,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+-----------------+--------|
  * |        |        | <      | {      | (      | [      |        |        |        | ]      | )      | }      | >      |        |        |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------------------------+--------|
- * |        |        |        |        |        |        |        |        |        |        |        | DM1    | DM2    |        |        |
+ * |        |        |        |        |        |        |        |        |        |        |        | DM1    | DM2    | TurTog | TurSpd |
  * |--------+--------+--------+--------+--------+-----------------+--------+--------+--------+--------+-----------------+--------+--------|
  * |        |        |        |        |                 |        |        |        |                 |        |                 |        |
  * '--------------------------------------------------------------------------------------------------------------------------------------'
@@ -233,7 +234,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, _______, _______, _______,  _______, _______, _______, _______, _______, _______, _______, _______, _______, TD(TDAR), KC_EQL,
     _______, _______, _______, TD(TDEM), _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,  KC_DEL,
     _______, _______, KC_LABK, KC_LCBR,  KC_LPRN, KC_LBRC, _______, _______, _______, KC_RBRC, KC_RPRN, KC_RCBR, KC_RABK, _______,  _______,
-    _______, _______, _______, _______,  _______, _______, _______, _______, _______, _______, _______, DM_PLY1, DM_PLY2, _______,  _______,
+    _______, _______, _______, _______,  _______, _______, _______, _______, _______, _______, _______, DM_PLY1, DM_PLY2, KC_TURT,  KC_TURS,
     _______, _______, _______, _______,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______
   ),
 
@@ -285,9 +286,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * .--------------------------------------------------------------------------------------------------------------------------------------.
  * |        |        |        |        |        |        |        |        |        | Home   |        |        |        |        |        |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+-----------------|
- * |        |Speed0  | Speed1 | Speed2 |        |        |        |        |        | Pgup   |        | MUp    |        | WheelU |        |
+ * |        |        |        |        |        |        |        |        |        | Pgup   |        | MUp    |        | WheelU |        |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+-----------------+--------|
- * |        |        |        |        |        |        |        |        |        | Pgdn   | MLeft  | MDown  | MRight | WheelD |        |
+ * |        |Speed0  | Speed1 | Speed2 |        |        |        |        |        | Pgdn   | MLeft  | MDown  | MRight | WheelD |        |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------------------------+--------|
  * |        |        |        |        |        |        |        |        |        | End    |        |        |        |        |        |
  * |--------+--------+--------+--------+--------+-----------------+--------+--------+--------+--------+-----------------+--------+--------|
@@ -297,8 +298,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_FL] = LAYOUT_ortho_5x15(
     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  KC_HOME, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
-    _______, KC_ACL0, KC_ACL1, KC_ACL2, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  KC_PGUP, XXXXXXX, KC_MS_U, XXXXXXX, KC_WH_U, _______,
-    _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  KC_PGDN, KC_MS_L, KC_MS_D, KC_MS_R, KC_WH_D, _______,
+    _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  KC_PGUP, XXXXXXX, KC_MS_U, XXXXXXX, KC_WH_U, _______,
+    _______, KC_ACL0, KC_ACL1, KC_ACL2, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  KC_PGDN, KC_MS_L, KC_MS_D, KC_MS_R, KC_WH_D, _______,
     _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  KC_END,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
     _______, _______, _______, _______, KC_BTN2, XXXXXXX, _______, _______, _______,  KC_BTN1, XXXXXXX, _______, _______, _______, _______
   ),
@@ -327,23 +328,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /* FUNCTION
  * .--------------------------------------------------------------------------------------------------------------------------------------.
- * |        | G1     |        |        |        |        | F10    | F11    | F12    |        |        |        |        |        | TD_DEV |
+ * |        | G1     |        |        |        |        | F10    | F11    | F12    |        |        | Pause  | ScrlLk | PrntSn | TD_DEV |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
- * |        | EZQWER | WPMTog |        |        |        | F7     | F8     | F9     | -      |        |        |        |        | C+A+D  |
+ * |        | EZQWER | WPMTog |        |        |        | F7     | F8     | F9     | -      |        | Ins    | Home   | PgUp   | C+A+D  |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
- * |        |        |        |        |        |        | F4     | F5     | F6     | +      |        |        |        |        |        |
+ * |        |        |        |        |        |        | F4     | F5     | F6     | +      |        | Del    | End    | PgDn   |        |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
- * |        |        |        |        |        |        | F1     | F2     | F3     |        |        | DM1R   | DM1R   |        |        |
+ * |        |        |        |        |        |        | F1     | F2     | F3     |        |        | DM1R   | DM1R   | TurRec | TurSpd |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
  * |        |        |        |        |        |        |        |        |        |        |        |        | FN     |        |        |
  * '--------------------------------------------------------------------------------------------------------------------------------------'
  */
 
   [_FN] = LAYOUT_ortho_5x15(
-    XXXXXXX, TG(_G1), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F10,  KC_F11,  KC_F12,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TD(TD_DEV),
-    XXXXXXX, TG(_QE), KC_TWPM, XXXXXXX, XXXXXXX, XXXXXXX, KC_F6,   KC_F7,   KC_F8,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_CAD,
-    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F4,   KC_F5,   KC_F6,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F1,   KC_F2,   KC_F3,   XXXXXXX, XXXXXXX, DM_REC1, DM_REC2, XXXXXXX, XXXXXXX,
+    XXXXXXX, TG(_G1), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F10,  KC_F11,  KC_F12,  XXXXXXX, XXXXXXX, KC_PAUS, KC_SLCK, KC_PSCR, TD(TD_DEV),
+    XXXXXXX, TG(_QE), KC_TWPM, XXXXXXX, XXXXXXX, XXXXXXX, KC_F6,   KC_F7,   KC_F8,   XXXXXXX, XXXXXXX, KC_INS,  KC_HOME, KC_PGUP, KC_CAD,
+    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F4,   KC_F5,   KC_F6,   XXXXXXX, XXXXXXX, KC_DEL,  KC_END,  KC_PGDN, XXXXXXX,
+    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F1,   KC_F2,   KC_F3,   XXXXXXX, XXXXXXX, DM_REC1, DM_REC2, KC_TURB, KC_TURS,
     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MO(_FN), XXXXXXX, XXXXXXX
   )
 };
@@ -504,7 +505,7 @@ void matrix_scan_user(void) {
         if(timer_elapsed(turbo_timer) > turbo_levels[turbo_info.level-1]) {
             for(unsigned int i =0; i<turbo_info.active; ++i) {
                 tap_code(turbo_codes[i]);
-                wait_ms(50);
+                wait_ms(40);
             }
             turbo_timer = timer_read();
         }
