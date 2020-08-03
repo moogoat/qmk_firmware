@@ -129,7 +129,15 @@ static struct TurboInfo {
     unsigned int active : 4;
 } turbo_info = (struct TurboInfo) { 0, 0, 0, 0 };
 
-
+void turbo_add_keycode(uint16_t keycode) {
+    if(turbo_info.active < 4) {
+        turbo_codes[turbo_info.active] = keycode;
+        ++turbo_info.active;
+        blink_led(HSV_BLINK_YELLOW, turbo_info.active);
+    } else {
+        blink_led(HSV_BLINK_OFF, 6);
+    }
+}
 
 /* BLANK
  * .--------------------------------------------------------------------------------------------------------------------------------------.
@@ -239,7 +247,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------------------------+--------|
  * | LSHIFT | Z      | X      | C      | V      | B      | -M3    | UP     | Mute   | N      | M      | ,      | .      | /      | Enter  |
  * |--------+--------+--------+--------+--------+-----------------+--------+--------+--------+--------+-----------------+--------+--------|
- * | LCTRL  | 2GUI   | -Turbo | LALT   | SPACE           | LEFT   | DOWN   | RIGHT  | SPACE           | -TurDn | Exit            | -TurUp |
+ * | LCTRL  | 2GUI   | TurTog | LALT   | SPACE           | LEFT   | DOWN   | RIGHT  | SPACE           | TurSpd | Exit            | TurRec |
  * '--------------------------------------------------------------------------------------------------------------------------------------'
  */
 
@@ -248,7 +256,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,  KC_Q,     KC_W,    KC_E,    KC_R,    KC_T,    DM_PLY1, XXXXXXX, KC_VOLU, KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,
     KC_ESC,  KC_A,     KC_S,    KC_D,    KC_F,    KC_G,    DM_PLY2, XXXXXXX, KC_VOLD, KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
     KC_LSFT, KC_Z,     KC_X,    KC_C,    KC_V,    KC_B,    XXXXXXX, KC_UP,   KC_MUTE, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_ENT,
-    KC_LCTL, TD(TD2G), KC_TURB, KC_LALT, KC_SPC,  XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, KC_SPC,  XXXXXXX, KC_TURS, TG(_G1), XXXXXXX, KC_TURT
+    KC_LCTL, TD(TD2G), KC_TURT, KC_LALT, KC_SPC,  XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, KC_SPC,  XXXXXXX, KC_TURS, TG(_G1), XXXXXXX, KC_TURB
   ),
 
 /* JLAYER
@@ -396,7 +404,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             turbo_info.on = 0;
         } else {
             turbo_info.recording = 0;
-            blink_led(HSV_BLINK_ON, turbo_info.active);
+            if(turbo_info.active == 0)
+                blink_led(HSV_BLINK_OFF, 6);
+            else
+                blink_led(HSV_BLINK_ON, turbo_info.active);
         }
         return false;
     case KC_TURT:
@@ -420,6 +431,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         return false;
     case KC_TURS:
         if(record->event.pressed) {
+            if(turbo_info.recording == 1) {
+                turbo_add_keycode(KC_MS_BTN1);
+                return false;
+            }
             if(turbo_info.level == 5) {
                 turbo_info.level = 0;
                 for(unsigned int i =0; i<turbo_info.active; ++i)
@@ -437,13 +452,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     default:
         reset_sleep_status();
         if(record->event.pressed && turbo_info.recording == 1) {
-            if(turbo_info.active < 4) {
-                turbo_codes[turbo_info.active] = keycode;
-                ++turbo_info.active;
-                blink_led(HSV_BLINK_YELLOW, turbo_info.active);
-            } else {
-                blink_led(HSV_BLINK_OFF, 6);
-            }
+            turbo_add_keycode(keycode);
             return false;
         }
         return true;
