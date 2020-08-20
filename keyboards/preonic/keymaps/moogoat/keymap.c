@@ -433,7 +433,10 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     [m_er] = ACTION_TAP_DANCE_FN(process_macro),
     [m_abnThroat] = ACTION_TAP_DANCE_FN(process_macro),
     [m_nka] = ACTION_TAP_DANCE_FN(process_macro),
-    [m_fever] = ACTION_TAP_DANCE_FN(process_macro)
+    [m_fever] = ACTION_TAP_DANCE_FN(process_macro),
+    [m_physio] = ACTION_TAP_DANCE_FN(process_macro),
+    [m_covid] = ACTION_TAP_DANCE_FN(process_macro),
+    [m_cereb] = ACTION_TAP_DANCE_FN(process_macro)
 };
 
 /*
