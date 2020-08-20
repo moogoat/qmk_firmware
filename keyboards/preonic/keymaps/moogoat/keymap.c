@@ -237,7 +237,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+-------------+------+------+------+------+------|
  * |      |asthma|asthma|      |fever |      |Health|      |      |      |      |      |
  * |------+------+------+------+------+------|------+------+------+------+------+------|
- * |      |      |      |      |      |      |NKDA  |      |MCOMMA|MPER  |      |ENTER |
+ * |      |      |      | covid|      |      |NKDA  |      |MCOMMA|MPER  |      |ENTER |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |      |      |      |      |      |             |      |      |      |      |      |
  * `-----------------------------------------------------------------------------------'
@@ -246,13 +246,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MACRO_DELETE, \
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TD(m_puffers), XXXXXXX, XXXXXXX, XXXXXXX, TD(m_iutd), XXXXXXX, TD(m_peds), XXXXXXX, \
   XXXXXXX, TD(m_puffers), TD(m_puffers), XXXXXXX, TD(m_fever), XXXXXXX, TD(m_healthy), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TD(m_nka), XXXXXXX, MACRO_COMMA, MACRO_PERIOD, XXXXXXX, KC_ENTER, \
+  XXXXXXX, XXXXXXX, XXXXXXX, TD(m_covid), XXXXXXX, XXXXXXX, TD(m_nka), XXXXXXX, MACRO_COMMA, MACRO_PERIOD, XXXXXXX, KC_ENTER, \
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX  \
 ),
 
 /* Macro 2 - Physical macros, normal
  * ,-----------------------------------------------------------------------------------.
- * |      |      |      |impuls|      |      |sensat|      |      |      |legs  |MDEL  |
+ * |      |      |      |impuls|      |      |sensat|cereb |      |      |legs  |MDEL  |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |      |      |well  |TM    |resp  |throat|motor |      |      |      |pulses|      |
  * |------+------+------+------+------+-------------+------+------+------+------+------|
@@ -265,7 +265,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 
 [_MACRO2] = LAYOUT_preonic_grid( \
-  XXXXXXX, XXXXXXX, XXXXXXX, TD(m_headImpulse), XXXXXXX, XXXXXXX, TD(m_sensation), XXXXXXX, XXXXXXX, XXXXXXX, TD(m_legs), MACRO_DELETE, \
+  XXXXXXX, XXXXXXX, XXXXXXX, TD(m_headImpulse), XXXXXXX, XXXXXXX, TD(m_sensation), TD(m_cereb), XXXXXXX, XXXXXXX, TD(m_legs), MACRO_DELETE, \
   XXXXXXX, XXXXXXX, TD(m_wellNAD), TD(m_eardrums), TD(m_resp), TD(m_nThroat), TD(m_motor), XXXXXXX, XXXXXXX, XXXXXXX, TD(m_pulses), XXXXXXX, \
   XXXXXXX, TD(m_abdo), TD(m_sinus), XXXXXXX, TD(m_afebrile), XXXXXXX, TD(m_reflexes), XXXXXXX, XXXXXXX, TD(m_noLymph), XXXXXXX, XXXXXXX, \
   XXXXXXX, XXXXXXX, XXXXXXX, TD(m_cv), XXXXXXX, XXXXXXX, TD(m_cn), XXXXXXX, MACRO_COMMA, MACRO_PERIOD, XXXXXXX, KC_ENTER, \
@@ -276,7 +276,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * ,-----------------------------------------------------------------------------------.
  * |      |      |      |      |      |      |      |      |      |      |      |MDEL  |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      |ICD9  |      |er    |      |throat|      |      |      |      |      |      |
+ * |ICD9  |ICD9  |      |er    |      |throat|      |      |      |      |physio|      |
  * |------+------+------+------+------+-------------+------+------+------+------+------|
  * |      |advil |      |      |fu    |      |honey |      |      |lymph |      |      |
  * |------+------+------+------+------+------|------+------+------+------+------+------|
@@ -288,7 +288,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_MACRO3] = LAYOUT_preonic_grid( \
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MACRO_DELETE, \
-  XXXXXXX, ICD9, XXXXXXX, TD(m_er), XXXXXXX, TD(m_abnThroat), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
+  ICD9, ICD9, XXXXXXX, TD(m_er), XXXXXXX, TD(m_abnThroat), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TD(m_physio), XXXXXXX, \
   XXXXXXX, TD(m_prns), XXXXXXX, XXXXXXX, TD(m_fu), XXXXXXX, TD(m_honey), XXXXXXX, XXXXXXX, TD(m_lymph), XXXXXXX, XXXXXXX, \
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MACRO_COMMA, MACRO_PERIOD, XXXXXXX, KC_ENTER, \
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX  \

@@ -36,7 +36,10 @@ enum moogoat_macro_codes {
     m_fu,
     m_er,
     m_nka,
-    m_fever
+    m_fever,
+    m_physio,
+    m_covid,
+    m_cereb
 };
 
 const char *moogoat_macros[][4] = {
@@ -55,8 +58,8 @@ const char *moogoat_macros[][4] = {
     {"Pulses normal", "Peripheral pulses normal", "Peripheral pulses symmetrical x4", 0},
     {"CN screening normal", "CN II-XII normal, PERL", 0, 0},
     {"Reflexes 2+ b/l", "Reflexes 2+ b/l, symmetrical", "Reflexes 2+ b/l upper/lower limbs", 0},
-    {"Moving all 4 limbs", "Upper/lower motor strong", "Upper/lower motor strong, symmetrical", "Upper/lower motor 5/5, symmetrical"},
-    {"Sensation intact", "Sensation intact b/l", 0, 0},
+    {"Moving all 4 limbs", "Upper/lower limb motor strong", "Upper/lower limb motor strong, symmetrical", "Upper/lower limb motor 5/5, symmetrical"},
+    {"Sensation intact", "Sensation intact b/l", "Sensation intact all limbs", 0},
     {"Positive head impulse", "Positive head impulse to the L", "Positive head impulse to the R", 0},
     {"IUTD", "Imm UTD", "Immunizations UTD", 0},
     {"Healthy", "Healthy otherwise", "Otherwise healthy", "No other medical issues"},
@@ -67,7 +70,10 @@ const char *moogoat_macros[][4] = {
     {"F/U PRN", "F/U if not better PRN", "F/U if not better or if getting worse", 0},
     {"Knows to go to ER if ", "ER if ", "To go to ER if ", 0},
     {"NKA", "NKDA", "No allergies", 0},
-    {"No subj fever", "No fever/chills", "No subj fever/chills", "Denies fever/chills"}
+    {"No subj fever", "No fever/chills", "No subj fever/chills", "Denies fever/chills"},
+    {"Please assess and treat as necessary", 0, 0, 0},
+    {"Phone consultation due to COVID19, patient consented", 0, 0, 0},
+    {"Cerebellar testing normal", "Cerebellar FTN normal", "Cerebellar FTN intact", "Cerebellar normal"}
 };
 
 uint8_t moogoat_grouplen(const char *group[]) {
