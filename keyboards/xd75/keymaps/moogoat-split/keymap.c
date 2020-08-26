@@ -350,7 +350,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * .--------------------------------------------------------------------------------------------------------------------------------------.
  * |        | G1     |        |        |        |        | F10    | F11    | F12    |        |        | Pause  | ScrlLk | PrntSn | TD_DEV |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
- * |        | EZQWER | WPMTog |        |        |        | F7     | F8     | F9     | -      |        | Ins    | Home   | PgUp   | C+A+D  |
+ * |        | EZQWER | WPMTog | EMAIL  |        |        | F7     | F8     | F9     | -      |        | Ins    | Home   | PgUp   | C+A+D  |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
  * |        |        |        |        |        |        | F4     | F5     | F6     | +      |        | Del    | End    | PgDn   |        |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
@@ -362,7 +362,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_FN] = LAYOUT_ortho_5x15(
     XXXXXXX, TG(_G1), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F10,  KC_F11,  KC_F12,  XXXXXXX, XXXXXXX, KC_PAUS, KC_SLCK, KC_PSCR, TD(TD_DEV),
-    XXXXXXX, TG(_QE), KC_TWPM, XXXXXXX, XXXXXXX, XXXXXXX, KC_F6,   KC_F7,   KC_F8,   XXXXXXX, XXXXXXX, KC_INS,  KC_HOME, KC_PGUP, KC_CAD,
+    XXXXXXX, TG(_QE), KC_TWPM, TD(TDEM),XXXXXXX, XXXXXXX, KC_F6,   KC_F7,   KC_F8,   XXXXXXX, XXXXXXX, KC_INS,  KC_HOME, KC_PGUP, KC_CAD,
     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F4,   KC_F5,   KC_F6,   XXXXXXX, XXXXXXX, KC_DEL,  KC_END,  KC_PGDN, XXXXXXX,
     KC_LSFT, KC_QWTG, KC_Q2TG, KC_Q3TG, XXXXXXX, XXXXXXX, KC_F1,   KC_F2,   KC_F3,   XXXXXXX, XXXXXXX, DM_REC1, DM_REC2, KC_TURB, KC_TURS,
     KC_LCTL, KC_LGUI, XXXXXXX, KC_LALT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MO(_FN), XXXXXXX, XXXXXXX
@@ -392,22 +392,16 @@ void td_emails(qk_tap_dance_state_t  *state, void *user_data) {
 
 void td_numpad(qk_tap_dance_state_t *state, void *user_data) {
     if(state->count == 2) {
-        if(IS_LAYER_ON(_NP))
-            layer_off(_NP);
-        else
-            layer_on(_NP);
+        layer_on(_NP);
     } else if(state->count == 5) {
-        SEND_STRING(SS_TAP(X_UP) SS_DELAY(500) PRIV_WPIN);
-    } else {
-        if(IS_LAYER_ON(_NP))
-            layer_off(_NP);
+        SEND_STRING(SS_TAP(X_UP) SS_DELAY(300) PRIV_WPIN SS_TAP(X_ENT));
     }
 }
 
 qk_tap_dance_action_t tap_dance_actions[] = {
     [TD_DEV] = ACTION_TAP_DANCE_FN(td_reset),
     [TDAR] = ACTION_TAP_DANCE_FN(td_arrow),
-    [TDNL] = ACTION_TAP_DANCE_LAYER_TOGGLE(XXXXXXX, _NP),
+    [TDNL] = ACTION_TAP_DANCE_FN(td_numpad),
     [TDEM] = ACTION_TAP_DANCE_FN(td_emails),
     [TD2G] = ACTION_TAP_DANCE_DOUBLE(XXXXXXX, KC_LGUI)
 };
