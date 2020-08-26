@@ -14,6 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include QMK_KEYBOARD_H
+#include "private.h"
 #define XD75_KEYCAPS_LED 5  // F5
 
 // Layer shorthand
@@ -384,9 +385,23 @@ void td_arrow(qk_tap_dance_state_t  *state, void *user_data) {
 
 void td_emails(qk_tap_dance_state_t  *state, void *user_data) {
     if (state->count == 1)
-        SEND_STRING("jayzhang89@gmail.com");
+        SEND_STRING(PRIV_EMAIL1);
     else if (state->count == 2)
-        SEND_STRING("jay2@ualberta.ca");
+        SEND_STRING(PRIV_EMAIL2);
+}
+
+void td_numpad(qk_tap_dance_state_t *state, void *user_data) {
+    if(state->count == 2) {
+        if(IS_LAYER_ON(_NP))
+            layer_off(_NP);
+        else
+            layer_on(_NP);
+    } else if(state->count == 5) {
+        SEND_STRING(SS_TAP(X_UP) SS_DELAY(500) PRIV_WPIN);
+    } else {
+        if(IS_LAYER_ON(_NP))
+            layer_off(_NP);
+    }
 }
 
 qk_tap_dance_action_t tap_dance_actions[] = {
