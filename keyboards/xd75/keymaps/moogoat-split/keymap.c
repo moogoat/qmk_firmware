@@ -390,9 +390,13 @@ void td_shutdown(qk_tap_dance_state_t  *state, void *user_data) {
     if (state->count == 2) {
         rgblight_disable();
         tap_code(KC_SLEP);
+    } else if(state->count == 3) {
+        SEND_STRING(SS_LGUI("r") SS_DELAY(100) "shutdown /a" SS_TAP(X_ENTER));
     } else if(state->count == 4) {
         rgblight_disable();
-        tap_code(KC_PWR);
+    } else if(state->count == 5) {
+        rgblight_disable();
+        SEND_STRING(SS_LGUI("r") SS_DELAY(100) "shutdown /sg /t 15" SS_TAP(X_ENTER) SS_DELAY(50) SS_TAP(X_ENTER));
     }
 }
 
@@ -413,6 +417,10 @@ void td_emails(qk_tap_dance_state_t  *state, void *user_data) {
 void td_numpad(qk_tap_dance_state_t *state, void *user_data) {
     if(state->count == 2) {
         layer_on(_NP);
+    } else if(state->count == 4) {
+        rgblight_enable();
+        rgblight_sethsv(HSV_QW);
+        layer_clear();
     } else if(state->count == 5) {
         rgblight_enable();
         rgblight_sethsv(HSV_QW);
