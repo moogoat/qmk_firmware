@@ -39,7 +39,7 @@ enum custom_keycodes {
     KC_TURB, // start turbo module,
     KC_TURS, // turbo speed toggle,
     KC_TURT, // turbo toggle
-    KC_Q2TG, KC_Q3TG, KC_QWTG // Enable experimental layers.
+    KC_Q2TG, KC_Q3TG, KC_QWTG, // Enable experimental layers.
 };
 
 // Tap Dance defintions
@@ -49,6 +49,7 @@ enum tap_dance_keycodes {
     TDNL, // twice for numpad lock
     TDEM, // emails
     TD2G, // 2gui
+    TDSH, // shutdown
 };
 
 // Custom keycode definitions
@@ -357,7 +358,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /* FUNCTION
  * .--------------------------------------------------------------------------------------------------------------------------------------.
- * |        | G1     |        |        |        |        | F10    | F11    | F12    |        |        | Pause  | ScrlLk | PrntSn | TD_DEV |
+ * | SHUTDN | G1     |        |        |        |        | F10    | F11    | F12    |        |        | Pause  | ScrlLk | PrntSn | TD_DEV |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
  * |        | EZQWER | WPMTog | EMAIL  |        |        | F7     | F8     | F9     | -      |        | Ins    | Home   | PgUp   | C+A+D  |
  * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
@@ -370,7 +371,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 
   [_FN] = LAYOUT_ortho_5x15(
-    XXXXXXX, TG(_G1), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F10,  KC_F11,  KC_F12,  XXXXXXX, XXXXXXX, KC_PAUS, KC_SLCK, KC_PSCR, TD(TD_DEV),
+    TD(TDSH),TG(_G1), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F10,  KC_F11,  KC_F12,  XXXXXXX, XXXXXXX, KC_PAUS, KC_SLCK, KC_PSCR, TD(TD_DEV),
     XXXXXXX, TG(_QE), KC_TWPM, TD(TDEM),XXXXXXX, XXXXXXX, KC_F6,   KC_F7,   KC_F8,   XXXXXXX, XXXXXXX, KC_INS,  KC_HOME, KC_PGUP, KC_CAD,
     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F4,   KC_F5,   KC_F6,   XXXXXXX, XXXXXXX, KC_DEL,  KC_END,  KC_PGDN, XXXXXXX,
     KC_LSFT, KC_QWTG, KC_Q2TG, KC_Q3TG, XXXXXXX, XXXXXXX, KC_F1,   KC_F2,   KC_F3,   XXXXXXX, XXXXXXX, DM_REC1, DM_REC2, KC_TURB, KC_TURS,
@@ -382,6 +383,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 void td_reset(qk_tap_dance_state_t  *state, void *user_data) {
     if (state->count >= 2) {
         reset_keyboard();
+    }
+}
+
+void td_shutdown(qk_tap_dance_state_t  *state, void *user_data) {
+    if (state->count == 2) {
+        rgblight_disable();
+        tap_code(KC_SLEP);
+    } else if(state->count == 4) {
+        rgblight_disable();
+        tap_code(KC_PWR);
     }
 }
 
@@ -403,7 +414,10 @@ void td_numpad(qk_tap_dance_state_t *state, void *user_data) {
     if(state->count == 2) {
         layer_on(_NP);
     } else if(state->count == 5) {
+        rgblight_enable();
+        rgblight_sethsv(HSV_QW);
         SEND_STRING(SS_TAP(X_UP) SS_DELAY(300) PRIV_WPIN SS_TAP(X_ENT));
+        layer_clear();
     }
 }
 
@@ -412,7 +426,8 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     [TDAR] = ACTION_TAP_DANCE_FN(td_arrow),
     [TDNL] = ACTION_TAP_DANCE_FN(td_numpad),
     [TDEM] = ACTION_TAP_DANCE_FN(td_emails),
-    [TD2G] = ACTION_TAP_DANCE_DOUBLE(XXXXXXX, KC_LGUI)
+    [TD2G] = ACTION_TAP_DANCE_DOUBLE(XXXXXXX, KC_LGUI),
+    [TDSH] = ACTION_TAP_DANCE_FN(td_shutdown)
 };
 
 // Keyboard overrides
